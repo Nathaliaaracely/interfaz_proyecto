@@ -1,0 +1,18 @@
+<nav style="background-color: #003366; padding: 15px;">
+  <ul style="display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; justify-content: center;">
+    <li><a href="admin.html" style="color: white; text-decoration: none; font-weight: bold;">Inicio Admin</a></li>
+    <li><a href="configurar-votacion.html" style="color: white; text-decoration: none; font-weight: bold;">Configurar Votación</a></li>
+    <li><a href="agregar-candidatos.html" style="color: white; text-decoration: none; font-weight: bold;">Agregar Candidatos</a></li>
+    <li><a href="resultados.html" style="color: white; text-decoration: none; font-weight: bold;">Resultados</a></li>
+    <li><a href="candidatos.html" style="color: white; text-decoration: none; font-weight: bold;">Ver Candidatos</a></li>
+    <li><a href="inicio.html" id="cerrarSesionAdmin" style="color: white; text-decoration: none; font-weight: bold;">Cerrar Sesión</a></li>
+  </ul>
+</nav>
+
+<script>
+  document.getElementById("cerrarSesionAdmin").addEventListener("click", e => {
+    e.preventDefault();
+    localStorage.removeItem("rolUsuario");
+    window.location.href = "inicio.html";
+  });
+</script>

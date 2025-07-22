@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resultados de la Votación</title>
+
+  <!--  ✅  Hoja de estilos global para los menús -->
+  <link rel="stylesheet" href="menu.css" />
+
+  <!--  ✅  Estilo propio de esta página -->
+  <style>
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f3f6f9}
+    .container{max-width:900px;margin:40px auto;padding:30px 20px;background:#fff;
+               border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,.1)}
+    h1{text-align:center;color:#003366;margin-bottom:30px}
+
+    .result-item{margin-bottom:25px}
+    .label{display:flex;justify-content:space-between;margin-bottom:5px;
+           font-weight:bold;color:#003366}
+    .progress-bar{width:100%;height:25px;background:#e5e7eb;border-radius:8px;
+                  overflow:hidden}
+    .progress{height:100%;background:#00aaff;width:0;text-align:right;color:#fff;
+              padding-right:10px;line-height:25px;font-weight:bold;
+              transition:width 1s}
+    @media(max-width:600px){.label{flex-direction:column;align-items:flex-start}}
+
+    .msg{max-width:900px;margin:40px auto;text-align:center;
+         font-size:1.2rem;color:#d9534f}
+  </style>
+</head>
+<body>
+  <!--  ⬇️  Menú se carga por JavaScript -->
+  <div id="menu"></div>
+
+  <!--  ⬇️  Mensaje mientras no se puedan mostrar resultados -->
+  <div id="mensajeEspera" class="msg" style="display:none;">
+    Resultados disponibles una vez finalice la votación.
+  </div>
+
+  <!--  ⬇️  Contenedor de resultados -->
+  <div class="container" id="contenedorResultados" style="display:none;">
+    <h1>Resultados de la Votación</h1>
+    <div id="listaResultados"></div>
+  </div>
+
+  <script>
+    /* ——————————————————————————————————————————
+       1) DETERMINAR ROL Y CARGAR MENÚ
+    —————————————————————————————————————————— */
+    const rolUsuario = localStorage.getItem("rolUsuario") || "usuario";
+
+    function cargarMenu() {
+      const archivo = (rolUsuario === "admin") ? "admin-menu.html" : "menu.html";
+      fetch(archivo)
+        .then(res => res.text())
+        .then(html => { document.getElementById("menu").innerHTML = html; });
+    }
+    cargarMenu();
+
+    /* ——————————————————————————————————————————
+       2) MOSTRAR / OCULTAR RESULTADOS
+    —————————————————————————————————————————— */
+    function actualizarVista() {
+      const finISO = localStorage.getItem("voto_fin");
+
+      if (!finISO) {
+        document.getElementById("mensajeEspera").textContent =
+          "⚠ La fecha de fin de votación no está configurada.";
+        document.getElementById("mensajeEspera").style.display = "block";
+        document.getElementById("contenedorResultados").style.display = "none";
+        return;
+      }
+
+      const ahora   = new Date();          // hora actual en la zona local
+      const finDate = new Date(finISO);    // fin de la votación en la misma zona
+
+      /*  ———  ADMIN: ve siempre  ——— */
+      if (rolUsuario === "admin") {
+        document.getElementById("mensajeEspera").style.display = "none";
+        document.getElementById("contenedorResultados").style.display = "block";
+        renderResultados();
+        return;
+      }
+
+      /*  ———  USUARIO NORMAL: solo si ya terminó  ——— */
+      if (ahora < finDate) {
+        document.getElementById("mensajeEspera").style.display = "block";
+        document.getElementById("contenedorResultados").style.display = "none";
+      } else {
+        document.getElementById("mensajeEspera").style.display = "none";
+        document.getElementById("contenedorResultados").style.display = "block";
+        renderResultados();
+      }
+    }
+
+    /* ——————————————————————————————————————————
+       3) RENDERIZAR RESULTADOS
+    —————————————————————————————————————————— */
+    function renderResultados() {
+      const votos      = JSON.parse(localStorage.getItem("votes"))      || {};
+      const candidatos = JSON.parse(localStorage.getItem("candidates")) || [];
+
+      /* Construir objeto nombre → votos (0 por defecto) */
+      const conteo = {};
+      candidatos.forEach(c => { conteo[c.name] = votos[c.name] || 0; });
+
+      const total = Object.values(conteo).reduce((a,b)=>a+b,0) || 1;
+
+      const lista = document.getElementById("listaResultados");
+      lista.innerHTML = "";
+
+      Object.entries(conteo).forEach(([nombre,num])=>{
+        const pct = ((num / total) * 100).toFixed(1);
+        lista.insertAdjacentHTML("beforeend", `
+          <div class="result-item">
+            <div class="label">
+              <span>${nombre}</span><span>${num} votos</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width:${pct}%">${pct}%</div>
+            </div>
+          </div>
+        `);
+      });
+    }
+
+    /* ——————————————————————————————————————————
+       4) INICIAR Y ACTUALIZAR CADA 30 s
+    —————————————————————————————————————————— */
+    actualizarVista();
+    setInterval(actualizarVista, 30000);
+  </script>
+</body>
+</html>

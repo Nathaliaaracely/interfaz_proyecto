@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inicio - Votación Electrónica</title>
+  <link rel="stylesheet" href="menu.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover; color: #fff;
+    }
+    .overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: -1;
+    }
+    .container {
+      max-width: 650px; margin: 120px auto 0 auto;
+      background: rgba(0, 51, 102, 0.85);
+      padding: 40px 30px; border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+    }
+    p.subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      font-weight: 300;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
+    }
+    .info-box {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .info-box span {
+      display: block;
+      font-weight: bold;
+      color: #00ccff;
+      margin-top: 10px;
+    }
+    a.btn {
+      display: inline-block;
+      background: #00aaff;
+      color: white;
+      font-size: 1.2rem;
+      padding: 15px 50px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0,170,255,0.6);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    a.btn:hover {
+      background: #008ecc;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,140,204,0.8);
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      color: #ccc;
+    }
+    @media(max-width: 480px){
+      .container { margin: 80px 20px 0 20px; padding: 30px 20px; }
+      h1 { font-size: 2rem; }
+      a.btn { padding: 12px 35px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="overlay"></div>
+
+  <div id="menu"></div>
+
+  <div class="container">
+    <h1>Bienvenido a VotoUni</h1>
+    <p class="subtitle">Sistema de votación electrónica de la Unidad Educativa</p>
+
+    <div class="info-box">
+      📢 Este proceso democrático permite a los estudiantes elegir a sus representantes del consejo estudiantil.<br>
+
+      <span>🕒 Horario de votación:</span>
+      <div id="horario">Cargando horario...</div>
+    </div>
+
+    <a href="votacion.html" class="btn" aria-label="Ir a la página de votación">Ir a Votar</a>
+
+    <footer>
+      &copy; 2025 Unidad Educativa - Todos los derechos reservados
+    </footer>
+  </div>
+
+  <script src="menu.js"></script>
+  <script>
+    // Cargar menú dinámico
+    fetch("menu.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("menu").innerHTML = data;
+      });
+
+    // Mostrar fecha y hora de inicio y fin
+    const contenedorHorario = document.getElementById("horario");
+    const inicio = localStorage.getItem("voto_inicio");
+    const fin = localStorage.getItem("voto_fin");
+
+    function formatearFecha(fechaISO) {
+      const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(fechaISO).toLocaleString('es-EC', opciones);
+    }
+
+    if (inicio && fin) {
+      contenedorHorario.innerHTML = `
+        Desde <strong>${formatearFecha(inicio)}</strong><br>
+        Hasta <strong>${formatearFecha(fin)}</strong>
+      `;
+    } else {
+      contenedorHorario.textContent = "Aún no se ha configurado la fecha de votación.";
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!-- menu.html -->
+<nav class="navbar">
+  <div class="navbar-logo">VotoUni</div>
+
+  <div class="navbar-search">
+    <input type="text" placeholder="Buscar..." id="searchInput" />
+    <button class="search-btn" id="btnBuscar">🔍</button>
+  </div>
+
+  <ul class="navbar-links" id="navLinks">
+    <li><a href="inicio2.html" data-i18n="navHome">Inicio</a></li>
+    <li><a href="candidatos.html" data-i18n="navCandidates">Candidatos</a></li>
+    <li><a href="votacion.html"   data-i18n="navVote">Votar</a></li>
+    <li><a href="resultados.html" data-i18n="navResults">Resultados</a></li>
+    <li><a href="inicio.html" data-i18n="navLogout">Cerrar Sesión</a></li>
+  </ul>
+
+  <!-- ⬇️ SELECTOR DE IDIOMA -->
+  <select id="langSelect" class="lang-select">
+    <option value="es">ES</option>
+    <option value="en">EN</option>
+  </select>
+
+  <div class="navbar-toggle" id="toggleMenuBtn">☰</div>
+</nav>
+
+<script src="i18n.js"></script> <!-- tu bloque de traducciones -->
+<script>
+  /* ——— MENÚ RESPONSIVE ——— */
+  document.getElementById("toggleMenuBtn").addEventListener("click",()=>{
+    document.getElementById("navLinks").classList.toggle("active");
+  });
+
+  /* ——— BÚSQUEDA ——— (igual que antes) */
+  document.getElementById("btnBuscar").addEventListener("click", e => {
+    e.preventDefault();
+    const q = document.getElementById("searchInput").value.toLowerCase().trim();
+    if(!q){alert("Escribe algo para buscar.");return;}
+    if(q.includes("presidente")||q.includes("candidato")) location.href="candidatos.html";
+    else if(/vot(a|o|ación)/.test(q))                     location.href="votacion.html";
+    else if(q.includes("resultado"))                      location.href="resultados.html";
+    else if(q.includes("inicio"))                         location.href="inicio2.html";
+    else alert("No se encontraron resultados para: "+q);
+  });
+
+  /* ——— CERRAR SESIÓN ——— */
+  document.getElementById("cerrarSesionUsuario").addEventListener("click",e=>{
+    e.preventDefault();
+    localStorage.removeItem("rolUsuario");
+    localStorage.removeItem("username");
+    location.href="inicio.html";
+  });
+</script>

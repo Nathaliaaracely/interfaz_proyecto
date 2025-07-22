@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bienvenida • Sistema de Votación</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('fondo.png') no-repeat center center/cover;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .hero-content {
+      background: rgba(255, 255, 255, 0.94);
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      max-width: 650px;
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      color: #002b5c;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      color: #333;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .btn-primary,
+    .btn-outline {
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background-color: #002b5c;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #001f3f;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      border: 2px solid #002b5c;
+      color: #002b5c;
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: #002b5c;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .info {
+      display: none;
+      background: rgba(255,255,255,0.96);
+      padding: 30px 20px;
+      text-align: center;
+      max-width: 700px;
+      margin-top: 30px;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .info h2 {
+      font-size: 1.6rem;
+      color: #002b5c;
+      margin-bottom: 16px;
+    }
+
+    .info p {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 600px) {
+      .hero-content {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="hero-content">
+    <h1>Sistema de Votación Electrónica</h1>
+    <p>
+      Participa en las elecciones universitarias de forma rápida, segura y transparente.<br />
+      Tu voz importa: elige representantes, decide proyectos y consulta resultados en tiempo real.
+    </p>
+
+    <div class="btn-container">
+      <a href="inicio.html" class="btn-primary">Iniciar sesión</a>
+      <button class="btn-outline" onclick="mostrarInfo()">Conócenos más</button>
+    </div>
+  </main>
+
+  <section id="info" class="info">
+    <h2>¿Cómo funciona?</h2>
+    <p>
+      1. Inicia sesión con tu cuenta institucional.<br>
+      2. Conoce a los candidatos y sus propuestas.<br>
+      3. Emite tu voto de forma segura.<br>
+      4. Revisa los resultados en tiempo real.
+    </p>
+  </section>
+
+  <script>
+    function mostrarInfo() {
+      const info = document.getElementById("info");
+      info.style.display = info.style.display === "block" ? "none" : "block";
+    }
+  </script>
+
+</body>
+</html>

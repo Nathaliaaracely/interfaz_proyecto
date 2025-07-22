@@ -1,0 +1,84 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  color: #003366;
+}
+
+form {
+  margin-top: 20px;
+}
+
+/* Estilo para cada candidato */
+.candidate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.candidate:hover {
+  background-color: #f0f0f0;
+}
+
+/* Imagen circular */
+.candidate img.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Radio al inicio */
+.candidate input[type="radio"] {
+  accent-color: #003366;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+/* Contenedor del nombre y descripción */
+.candidate div {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #005bb5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #003f8a;
+}
+
+#resultMessage {
+  margin-top: 20px;
+  font-weight: bold;
+  text-align: center;
+}

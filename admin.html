@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel de Administrador</title>
+  <link rel="stylesheet" href="menu.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #003366;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .admin-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .admin-links a {
+      text-decoration: none;
+      background-color: #003366;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+    }
+
+    .admin-links a:hover {
+      background-color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="admin-menu"></div>
+
+  <div class="container">
+    <h1>Bienvenido, Administrador</h1>
+    <p>Desde este panel puedes gestionar todo el sistema de votación electrónica.</p>
+
+    <div class="admin-links">
+      <a href="configurar-votacion.html">Configurar Fecha y Hora</a>
+      <a href="agregar-candidatos.html">Agregar Candidatos</a>
+      <a href="resultados.html">Ver Resultados</a>
+        <a href="candidatos.html">Ver Candidatos</a>
+        <a href="inicio.html">Cerrar Sesión</a>
+    </div>
+  </div>
+
+  <script>
+    // Cargar menú del administrador
+    fetch("admin-menu.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("admin-menu").innerHTML = data;
+      });
+  </script>
+
+</body>
+</html>

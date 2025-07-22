@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Candidatos - VotoUni</title>
+  <link rel="stylesheet" href="menu.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+
+    .candidates-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .candidate-profile {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 250px;
+      text-align: center;
+    }
+
+    .candidate-profile img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 3px solid #003366;
+    }
+
+    .candidate-profile h3 {
+      color: #003366;
+      margin-bottom: 10px;
+    }
+
+    .candidate-profile p {
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    @media(max-width: 600px) {
+      .candidates-list {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="menu"></div>
+
+  <div class="container">
+    <h1>Conoce a los Candidatos</h1>
+
+    <div class="candidates-list">
+      <!-- Candidato A -->
+      <div class="candidate-profile">
+        <img src="perfilb.png" alt="Candidato A" />
+        <h3>Candidato A</h3>
+        <p><strong>Curso:</strong> 3ro BGU</p>
+        <p><strong>Propuesta:</strong> Mejora de áreas verdes, creación de club de tecnología, más actividades deportivas.</p>
+      </div>
+
+      <!-- Candidato B -->
+      <div class="candidate-profile">
+        <img src="perfilc.png" alt="Candidato B" />
+        <h3>Candidato B</h3>
+        <p><strong>Curso:</strong> 2do BGU</p>
+        <p><strong>Propuesta:</strong> Biblioteca digital, torneos estudiantiles, charlas motivacionales cada mes.</p>
+      </div>
+
+      <!-- Candidato C -->
+      <div class="candidate-profile">
+        <img src="perfilh.webp" alt="Candidato C" />
+        <h3>Candidato C</h3>
+        <p><strong>Curso:</strong> 1ro BGU</p>
+        <p><strong>Propuesta:</strong> Reciclaje escolar, buzón de sugerencias, campañas de concientización.</p>
+      </div>
+
+      <!-- Candidato D -->
+      <div class="candidate-profile">
+        <img src="imagesd.png" alt="Candidato D" />
+        <h3>Candidato D</h3>
+        <p><strong>Curso:</strong> 3ro BGU</p>
+        <p><strong>Propuesta:</strong> Semana cultural, inclusión estudiantil, app para comunicarse con docentes.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="menu.js"></script>
+  <script>
+    fetch("menu.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("menu").innerHTML = data;
+      });
+  </script>
+
+</body>
+</html>

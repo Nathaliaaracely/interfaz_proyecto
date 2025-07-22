@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="wrapper">
+        <form id="loginForm">
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="text" id="username" placeholder="Username" required />
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password" placeholder="Password" required />
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox" /> Remember me</label>
+                <a href="#">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="register-link">
+                <p>Don't have an account? <a href="#">Register</a></p>
+            </div>
+
+        </form>
+    </div>
+
+<script>
+  // Ejemplo simple de usuarios y contraseñas (puedes añadir más)
+  const users = {
+    admin: { password: "1234", role: "admin" },
+    usua1: { password: "4321", role: "user" },
+    // puedes agregar más usuarios aquí:
+    // usua2: { password: "pass2", role: "user" },
+  };
+
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+      alert("Por favor, completa todos los campos");
+      return;
+    }
+
+    if (users[username] && users[username].password === password) {
+      // Guardar rol en localStorage para otras páginas
+      localStorage.setItem("rolUsuario", users[username].role);
+
+      // Redirigir según rol
+      if (users[username].role === "admin") {
+        window.location.href = "admin.html";   // Panel administrador
+      } else if (users[username].role === "user") {
+        window.location.href = "inicio2.html"; // Panel usuario
+      }
+    } else {
+      alert("Usuario o contraseña incorrectos");
+    }
+
+
+  });
+</script>
+</body>
+</html>
