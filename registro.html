@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <form id="registerForm">
+      <h1>Crear Cuenta</h1>
+
+      <div id="errorMessage"></div>
+      <div id="successMessage"></div>
+
+      <div class="input-box">
+        <input type="text" id="fullName" placeholder="Nombre completo" required />
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="email" id="email" placeholder="Correo electrónico" required />
+        <i class='bx bx-envelope'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="text" id="newUsername" placeholder="Nombre de usuario" required />
+        <i class='bx bxs-user-circle'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="password" id="newPassword" placeholder="Contraseña" required />
+        <i class='bx bx-show' id="togglePassword" title="Mostrar/Ocultar contraseña"></i>
+        <i class='bx bxs-lock'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required />
+        <i class='bx bx-show' id="toggleConfirmPassword" title="Mostrar/Ocultar contraseña"></i>
+        <i class='bx bxs-lock'></i>
+      </div>
+
+      <div class="remember-forgot">
+        <label><input type="checkbox" id="termsAccepted" required /> Acepto los términos y condiciones</label>
+      </div>
+
+      <button type="submit" class="btn">Registrarse</button>
+
+      <div class="register-link">
+        <p>¿Ya tienes una cuenta? <a href="inicio.html">Iniciar sesión</a></p>
+      </div>
+    </form>
+  </div>
+
+<script>
+  // Función para obtener usuarios registrados del localStorage
+  function obtenerUsuarios() {
+    const usuarios = localStorage.getItem('usuariosRegistrados');
+    if (usuarios) {
+      return JSON.parse(usuarios);
+    } else {
+      // Usuarios por defecto
+      const usuariosPorDefecto = {
+        admin: { password: "1234", role: "admin", fullName: "Administrador", email: "admin@admin.com" },
+        usua1: { password: "4321", role: "user", fullName: "Usuario 1", email: "user1@test.com" }
+      };
+      localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosPorDefecto));
+      return usuariosPorDefecto;
+    }
+  }
+
+  // Función para guardar usuarios en localStorage
+  function guardarUsuarios(usuarios) {
+    localStorage.setItem('usuariosRegistrados', JSON.stringify(usuarios));
+  }
+
+  // Mostrar/Ocultar contraseña
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordField = document.getElementById('newPassword');
+  const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+  const confirmPasswordField = document.getElementById('confirmPassword');
+
+  togglePassword.addEventListener('click', function () {
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      togglePassword.classList.remove('bx-show');
+      togglePassword.classList.add('bx-hide');
+    } else {
+      passwordField.type = 'password';
+      togglePassword.classList.remove('bx-hide');
+      togglePassword.classList.add('bx-show');
+    }
+  });
+
+  toggleConfirmPassword.addEventListener('click', function () {
+    if (confirmPasswordField.type === 'password') {
+      confirmPasswordField.type = 'text';
+      toggleConfirmPassword.classList.remove('bx-show');
+      toggleConfirmPassword.classList.add('bx-hide');
+    } else {
+      confirmPasswordField.type = 'password';
+      toggleConfirmPassword.classList.remove('bx-hide');
+      toggleConfirmPassword.classList.add('bx-show');
+    }
+  });
+
+  // Función para mostrar mensajes
+  function mostrarMensaje(mensaje, tipo = 'error') {
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+    
+    if (tipo === 'success') {
+      successDiv.style.display = 'block';
+      successDiv.textContent = mensaje;
+      successDiv.style.backgroundColor = '#d4edda';
+      successDiv.style.borderColor = '#c3e6cb';
+      successDiv.style.color = '#155724';
+      successDiv.style.padding = '10px';
+      successDiv.style.borderRadius = '5px';
+      successDiv.style.marginBottom = '15px';
+      successDiv.style.border = '1px solid';
+      errorDiv.style.display = 'none';
+      
+      setTimeout(() => {
+        successDiv.style.display = 'none';
+      }, 5000);
+    } else {
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = mensaje;
+      errorDiv.style.backgroundColor = '#f8d7da';
+      errorDiv.style.borderColor = '#f5c6cb';
+      errorDiv.style.color = '#721c24';
+      errorDiv.style.padding = '10px';
+      errorDiv.style.borderRadius = '5px';
+      errorDiv.style.marginBottom = '15px';
+      errorDiv.style.border = '1px solid';
+      successDiv.style.display = 'none';
+      
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 5000);
+    }
+  }
+
+  // Validar contraseña
+  function validarPassword(password) {
+    if (password.length < 4) {
+      return "La contraseña debe tener al menos 4 caracteres";
+    }
+    return null;
+  }
+
+  // Validar email
+  function validarEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Por favor, ingresa un email válido";
+    }
+    return null;
+  }
+
+  // Manejo del registro
+  document.getElementById("registerForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const fullName = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const username = document.getElementById("newUsername").value.trim();
+    const password = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const termsAccepted = document.getElementById("termsAccepted").checked;
+
+    // Validaciones
+    if (!fullName || !email || !username || !password || !confirmPassword) {
+      mostrarMensaje("Por favor, completa todos los campos");
+      return;
+    }
+
+    if (!termsAccepted) {
+      mostrarMensaje("Debes aceptar los términos y condiciones");
+      return;
+    }
+
+    const emailError = validarEmail(email);
+    if (emailError) {
+      mostrarMensaje(emailError);
+      return;
+    }
+
+    const passwordError = validarPassword(password);
+    if (passwordError) {
+      mostrarMensaje(passwordError);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      mostrarMensaje("Las contraseñas no coinciden");
+      return;
+    }
+
+    // Verificar si el usuario ya existe
+    const usuarios = obtenerUsuarios();
+    if (usuarios[username]) {
+      mostrarMensaje("El nombre de usuario ya está en uso");
+      return;
+    }
+
+    // Verificar si el email ya está registrado
+    const emailExiste = Object.values(usuarios).some(user => user.email === email);
+    if (emailExiste) {
+      mostrarMensaje("El email ya está registrado");
+      return;
+    }
+
+    // Crear nuevo usuario
+    usuarios[username] = {
+      password: password,
+      role: "user",
+      fullName: fullName,
+      email: email
+    };
+
+    // Guardar en localStorage
+    guardarUsuarios(usuarios);
+
+    // Mostrar mensaje de éxito
+    mostrarMensaje("¡Registro exitoso! Serás redirigido al login en 3 segundos...", 'success');
+
+    // Redirigir al login después de 3 segundos
+    setTimeout(() => {
+      window.location.href = "inicio.html";
+    }, 3000);
+  });
+</script>
+</body>
+</html>

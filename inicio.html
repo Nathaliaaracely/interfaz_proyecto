@@ -34,17 +34,27 @@
       <button type="submit" class="btn">Login</button>
 
       <div class="register-link">
-        <p>Don't have an account? <a href="#">Register</a></p>
+        <p>Don't have an account? <a href="registro.html">Register</a></p>
       </div>
     </form>
   </div>
 
 <script>
-  // Usuarios simulados
-  const users = {
-    admin: { password: "1234", role: "admin" },
-    usua1: { password: "4321", role: "user" }
-  };
+  // Función para obtener usuarios registrados del localStorage
+  function obtenerUsuarios() {
+    const usuarios = localStorage.getItem('usuariosRegistrados');
+    if (usuarios) {
+      return JSON.parse(usuarios);
+    } else {
+      // Usuarios por defecto si no hay registros
+      const usuariosPorDefecto = {
+        admin: { password: "1234", role: "admin", fullName: "Administrador", email: "admin@admin.com" },
+        usua1: { password: "4321", role: "user", fullName: "Usuario 1", email: "user1@test.com" }
+      };
+      localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosPorDefecto));
+      return usuariosPorDefecto;
+    }
+  }
 
   // Variables para controlar intentos
   let intentosFallidos = parseInt(localStorage.getItem('intentosFallidos')) || 0;
@@ -106,6 +116,9 @@
       return;
     }
 
+    // Obtener usuarios registrados
+    const users = obtenerUsuarios();
+
     if (users[username] && users[username].password === password) {
       // Éxito
       intentosFallidos = 0;
@@ -114,6 +127,7 @@
       localStorage.removeItem('tiempoBloqueado');
 
       localStorage.setItem("rolUsuario", users[username].role);
+      localStorage.setItem("usuarioActual", username);
 
       if (users[username].role === "admin") {
         window.location.href = "admin.html";
