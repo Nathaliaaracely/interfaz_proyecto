@@ -143,28 +143,48 @@
   <div id="menu"></div>
 
   <div class="container">
-    <h1>Panel Administrador - Candidatos</h1>
+    <h1>Panel Administrador - Listas Electorales</h1>
 
-    <!-- Formulario para agregar nuevo candidato -->
+    <!-- Formulario para agregar nueva lista electoral -->
     <form id="addCandidateForm" class="add-candidate-form" enctype="multipart/form-data">
-      <h2>Añadir Nuevo Candidato</h2>
+      <h2>Añadir Nueva Lista Electoral</h2>
       <div class="form-group">
-        <label for="name">Nombre del Candidato:</label>
-        <input type="text" id="name" required />
+        <label for="numero">Número de Lista:</label>
+        <input type="number" id="numero" min="1" required />
       </div>
       <div class="form-group">
-        <label for="course">Curso:</label>
-        <input type="text" id="course" required />
+        <label for="nombre">Nombre de la Lista:</label>
+        <input type="text" id="nombre" placeholder='Ej: Lista "Unión Estudiantil"' required />
       </div>
       <div class="form-group">
-        <label for="proposal">Propuesta:</label>
-        <textarea id="proposal" required></textarea>
+        <label for="slogan">Slogan:</label>
+        <input type="text" id="slogan" placeholder="Ej: Juntos construimos el futuro" required />
       </div>
       <div class="form-group">
-        <label for="photo">Foto (URL o archivo local):</label>
+        <label for="presidente">Presidente:</label>
+        <input type="text" id="presidente" required />
+      </div>
+      <div class="form-group">
+        <label for="vicepresidente">Vicepresidente:</label>
+        <input type="text" id="vicepresidente" required />
+      </div>
+      <div class="form-group">
+        <label for="secretario">Secretario/a:</label>
+        <input type="text" id="secretario" required />
+      </div>
+      <div class="form-group">
+        <label for="tesorero">Tesorero/a:</label>
+        <input type="text" id="tesorero" required />
+      </div>
+      <div class="form-group">
+        <label for="propuestas">Propuestas (una por línea):</label>
+        <textarea id="propuestas" rows="4" placeholder="Escribe cada propuesta en una línea separada" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="photo">Foto representativa de la lista:</label>
         <input type="file" id="photo" accept="image/*" />
       </div>
-      <button type="submit">Agregar Candidato</button>
+      <button type="submit">Agregar Lista Electoral</button>
     </form>
 
     <!-- Lista dinámica de candidatos -->
@@ -185,32 +205,72 @@
     const candidatesList = document.getElementById('candidatesList');
     const addCandidateForm = document.getElementById('addCandidateForm');
 
-    // Leer candidatos guardados en localStorage o usar los iniciales
+    // Listas completas de candidatos (igual que en votacion.html y resultados.html)
     let candidates = JSON.parse(localStorage.getItem('candidates')) || [
       {
-        name: "Candidato A",
-        course: "3ro BGU",
-        proposal: "Mejora de áreas verdes, creación de club de tecnología, más actividades deportivas.",
-        photo: "perfilb.png"
+        numero: 1,
+        nombre: "Lista \"Unión Estudiantil\"",
+        slogan: "Juntos construimos el futuro",
+        presidente: "Ana García",
+        vicepresidente: "Carlos Mendoza",
+        secretario: "María López",
+        tesorero: "David Ruiz",
+        photo: "perfilb.png",
+        propuestas: [
+          "Mejora de áreas verdes y espacios recreativos",
+          "Creación de club de tecnología y robótica", 
+          "Organización de actividades deportivas inter-cursos",
+          "Implementación de buzón de sugerencias digital"
+        ]
       },
       {
-        name: "Candidato B",
-        course: "2do BGU",
-        proposal: "Biblioteca digital, torneos estudiantiles, charlas motivacionales cada mes.",
-        photo: "perfilc.png"
+        numero: 2,
+        nombre: "Lista \"Innovación Estudiantil\"",
+        slogan: "Transformando la educación",
+        presidente: "Luis Vargas",
+        vicepresidente: "Sofia Torres",
+        secretario: "Miguel Santos",
+        tesorero: "Isabella Cruz",
+        photo: "imagesd.png",
+        propuestas: [
+          "Biblioteca digital con recursos interactivos",
+          "Torneos estudiantiles y competencias académicas",
+          "Charlas motivacionales mensuales con invitados",
+          "Plataforma digital para comunicación estudiantil"
+        ]
       },
       {
-        name: "Candidato C",
-        course: "1ro BGU",
-        proposal: "Reciclaje escolar, buzón de sugerencias, campañas de concientización.",
-        photo: "perfilh.webp"
+        numero: 3,
+        nombre: "Lista \"Verde y Futuro\"",
+        slogan: "Por un colegio sostenible",
+        presidente: "Camila Herrera",
+        vicepresidente: "Andrés Morales",
+        secretario: "Valeria Jiménez",
+        tesorero: "Diego Castillo",
+        photo: "perfilh.webp",
+        propuestas: [
+          "Programa de reciclaje escolar integral",
+          "Huerto estudiantil y educación ambiental",
+          "Campañas de concientización ecológica",
+          "Reducción del uso de plásticos en la institución"
+        ]
       },
       {
-        name: "Candidato D",
-        course: "3ro BGU",
-        proposal: "Semana cultural, inclusión estudiantil, app para comunicarse con docentes.",
-        photo: "imagesd.png"
-      },
+        numero: 4,
+        nombre: "Lista \"Cultura y Arte\"",
+        slogan: "Expresando nuestra identidad",
+        presidente: "Roberto Vega",
+        vicepresidente: "Daniela Flores",
+        secretario: "Fernando Paz",
+        tesorero: "Gabriela Rojas",
+        photo: "perfilc.png",
+        propuestas: [
+          "Semana cultural anual con presentaciones",
+          "Talleres de arte, música y teatro",
+          "Inclusión de todas las expresiones estudiantiles",
+          "App móvil para comunicación con docentes"
+        ]
+      }
     ];
 
     // Función para mostrar candidatos en la página
@@ -221,11 +281,20 @@
         const div = document.createElement('div');
         div.className = 'candidate-profile';
         div.innerHTML = `
-          <img src="${c.photo}" alt="${c.name}" />
-          <h3>${c.name}</h3>
-          <p><strong>Curso:</strong> ${c.course}</p>
-          <p><strong>Propuesta:</strong> ${c.proposal}</p>
-          <button data-index="${index}" class="remove-btn" style="margin-top:10px; background:#cc3333; border:none; padding:5px 10px; color:white; border-radius:5px; cursor:pointer;">Eliminar</button>
+          <img src="${c.photo}" alt="${c.nombre}" />
+          <h3>Lista ${c.numero}: ${c.nombre}</h3>
+          <p><strong>Slogan:</strong> "${c.slogan}"</p>
+          <p><strong>Presidente:</strong> ${c.presidente}</p>
+          <p><strong>Vicepresidente:</strong> ${c.vicepresidente}</p>
+          <p><strong>Secretario/a:</strong> ${c.secretario}</p>
+          <p><strong>Tesorero/a:</strong> ${c.tesorero}</p>
+          <div style="margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 5px;">
+            <strong>Propuestas:</strong>
+            <ul style="margin: 5px 0; padding-left: 20px;">
+              ${c.propuestas.map(prop => `<li style="font-size: 0.85em; margin: 3px 0;">${prop}</li>`).join('')}
+            </ul>
+          </div>
+          <button data-index="${index}" class="remove-btn" style="margin-top:10px; background:#cc3333; border:none; padding:5px 10px; color:white; border-radius:5px; cursor:pointer;">Eliminar Lista</button>
         `;
         candidatesList.appendChild(div);
       });
@@ -256,13 +325,18 @@
       });
     }
 
-    // Manejar envío del formulario para agregar candidato
+    // Manejar envío del formulario para agregar lista electoral
     addCandidateForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const name = document.getElementById('name').value.trim();
-      const course = document.getElementById('course').value.trim();
-      const proposal = document.getElementById('proposal').value.trim();
+      const numero = parseInt(document.getElementById('numero').value);
+      const nombre = document.getElementById('nombre').value.trim();
+      const slogan = document.getElementById('slogan').value.trim();
+      const presidente = document.getElementById('presidente').value.trim();
+      const vicepresidente = document.getElementById('vicepresidente').value.trim();
+      const secretario = document.getElementById('secretario').value.trim();
+      const tesorero = document.getElementById('tesorero').value.trim();
+      const propuestasText = document.getElementById('propuestas').value.trim();
       const photoInput = document.getElementById('photo');
       let photo = "";
 
@@ -270,25 +344,52 @@
         try {
           photo = await fileToBase64(photoInput.files[0]);
         } catch {
-          photo = "";
+          photo = "perfildefault.png";
         }
       } else {
         photo = "perfildefault.png"; // Imagen por defecto si no sube nada
       }
 
-      // Validar campos (ya con required en inputs, pero doble seguridad)
-      if (!name || !course || !proposal) {
+      // Validar campos
+      if (!numero || !nombre || !slogan || !presidente || !vicepresidente || !secretario || !tesorero || !propuestasText) {
         alert("Por favor completa todos los campos.");
         return;
       }
 
-      // Agregar nuevo candidato a la lista
-      candidates.push({ name, course, proposal, photo });
+      // Convertir propuestas de texto a array
+      const propuestas = propuestasText.split('\n').filter(prop => prop.trim() !== '').map(prop => prop.trim());
+
+      if (propuestas.length === 0) {
+        alert("Debes agregar al menos una propuesta.");
+        return;
+      }
+
+      // Verificar que no exista una lista con el mismo número
+      if (candidates.find(c => c.numero === numero)) {
+        alert(`Ya existe una lista con el número ${numero}. Elige otro número.`);
+        return;
+      }
+
+      // Agregar nueva lista electoral
+      const nuevaLista = {
+        numero,
+        nombre,
+        slogan,
+        presidente,
+        vicepresidente,
+        secretario,
+        tesorero,
+        photo,
+        propuestas
+      };
+
+      candidates.push(nuevaLista);
       saveCandidates();
       displayCandidates();
 
       // Limpiar formulario
       addCandidateForm.reset();
+      alert("Lista electoral agregada exitosamente!");
     });
 
     // Inicializar visualización

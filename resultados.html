@@ -15,15 +15,18 @@
                border-radius:12px;box-shadow:0 0 15px rgba(0,0,0,.1)}
     h1{text-align:center;color:#003366;margin-bottom:30px}
 
-    .result-item{margin-bottom:25px}
-    .label{display:flex;justify-content:space-between;margin-bottom:5px;
+    .result-item{margin-bottom:25px;padding:15px;background:#f8f9fa;border-radius:10px;border-left:4px solid #007bff}
+    .label{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;
            font-weight:bold;color:#003366}
-    .progress-bar{width:100%;height:25px;background:#e5e7eb;border-radius:8px;
-                  overflow:hidden}
-    .progress{height:100%;background:#00aaff;width:0;text-align:right;color:#fff;
-              padding-right:10px;line-height:25px;font-weight:bold;
-              transition:width 1s}
-    @media(max-width:600px){.label{flex-direction:column;align-items:flex-start}}
+    .progress-bar{width:100%;height:30px;background:#e5e7eb;border-radius:8px;
+                  overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.1)}
+    .progress{height:100%;background:linear-gradient(90deg, #007bff, #0056b3);width:0;text-align:right;color:#fff;
+              padding-right:15px;line-height:30px;font-weight:bold;font-size:0.9em;
+              transition:width 1.5s ease-in-out;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+    @media(max-width:600px){
+      .label{flex-direction:column;align-items:flex-start}
+      .container{margin:20px;padding:20px}
+    }
 
     .msg{max-width:900px;margin:40px auto;text-align:center;
          font-size:1.2rem;color:#d9534f}
@@ -98,24 +101,88 @@
        3) RENDERIZAR RESULTADOS
     —————————————————————————————————————————— */
     function renderResultados() {
-      const votos      = JSON.parse(localStorage.getItem("votes"))      || {};
-      const candidatos = JSON.parse(localStorage.getItem("candidates")) || [];
+      const votos = JSON.parse(localStorage.getItem("votes")) || {};
+      
+      // Listas completas de candidatos (igual que en votacion.html)
+      const listasCandidatos = [
+        {
+          numero: 1,
+          nombre: "Lista \"Unión Estudiantil\"",
+          slogan: "Juntos construimos el futuro",
+          presidente: "Ana García",
+          vicepresidente: "Carlos Mendoza",
+          secretario: "María López",
+          tesorero: "David Ruiz",
+          photo: "perfilb.png"
+        },
+        {
+          numero: 2,
+          nombre: "Lista \"Innovación Estudiantil\"",
+          slogan: "Transformando la educación",
+          presidente: "Luis Vargas",
+          vicepresidente: "Sofia Torres",
+          secretario: "Miguel Santos",
+          tesorero: "Isabella Cruz",
+          photo: "imagesd.png"
+        },
+        {
+          numero: 3,
+          nombre: "Lista \"Verde y Futuro\"",
+          slogan: "Por un colegio sostenible",
+          presidente: "Camila Herrera",
+          vicepresidente: "Andrés Morales",
+          secretario: "Valeria Jiménez",
+          tesorero: "Diego Castillo",
+          photo: "perfilh.webp"
+        },
+        {
+          numero: 4,
+          nombre: "Lista \"Cultura y Arte\"",
+          slogan: "Expresando nuestra identidad",
+          presidente: "Roberto Vega",
+          vicepresidente: "Daniela Flores",
+          secretario: "Fernando Paz",
+          tesorero: "Gabriela Rojas",
+          photo: "perfilc.png"
+        }
+      ];
+
+      // Usar listas predefinidas si no hay candidatos en localStorage
+      let candidatos = JSON.parse(localStorage.getItem("candidates")) || [];
+      if (candidatos.length === 0) {
+        candidatos = listasCandidatos;
+      }
 
       /* Construir objeto nombre → votos (0 por defecto) */
       const conteo = {};
-      candidatos.forEach(c => { conteo[c.name] = votos[c.name] || 0; });
+      candidatos.forEach(c => { 
+        conteo[c.nombre] = votos[c.nombre] || 0; 
+      });
 
       const total = Object.values(conteo).reduce((a,b)=>a+b,0) || 1;
 
       const lista = document.getElementById("listaResultados");
       lista.innerHTML = "";
 
-      Object.entries(conteo).forEach(([nombre,num])=>{
+      // Ordenar por número de votos (descendente)
+      const resultadosOrdenados = Object.entries(conteo).sort((a,b) => b[1] - a[1]);
+
+      resultadosOrdenados.forEach(([nombre,num])=>{
         const pct = ((num / total) * 100).toFixed(1);
+        
+        // Encontrar información adicional de la lista
+        const listaInfo = candidatos.find(c => c.nombre === nombre);
+        const numeroLista = listaInfo ? listaInfo.numero : '';
+        const presidente = listaInfo ? listaInfo.presidente : '';
+        
         lista.insertAdjacentHTML("beforeend", `
           <div class="result-item">
             <div class="label">
-              <span>${nombre}</span><span>${num} votos</span>
+              <span>
+                <strong>Lista ${numeroLista}:</strong> ${nombre}
+                ${presidente ? `<br><small style="color: #666; font-weight: normal;">Presidente: ${presidente}</small>` : ''}
+              </span>
+              <span style="color: #007bff; font-size: 1.1em;">${num} votos</span>
             </div>
             <div class="progress-bar">
               <div class="progress" style="width:${pct}%">${pct}%</div>
@@ -123,6 +190,13 @@
           </div>
         `);
       });
+
+      // Mostrar total de votos
+      lista.insertAdjacentHTML("beforeend", `
+        <div style="margin-top: 30px; text-align: center; font-size: 1.2em; color: #003366;">
+          <strong>Total de votos emitidos: ${total}</strong>
+        </div>
+      `);
     }
 
     /* ——————————————————————————————————————————

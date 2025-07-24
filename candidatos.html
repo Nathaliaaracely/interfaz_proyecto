@@ -13,7 +13,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: auto;
       padding: 40px 20px;
     }
@@ -21,48 +21,146 @@
     h1 {
       text-align: center;
       color: #003366;
+      margin-bottom: 20px;
     }
 
-    .candidates-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 30px;
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .lists-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 40px;
       margin-top: 40px;
     }
 
-    .candidate-profile {
+    .candidate-list {
       background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 250px;
-      text-align: center;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      border-left: 6px solid #003366;
     }
 
-    .candidate-profile img {
-      width: 100px;
-      height: 100px;
+    .list-header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .list-number {
+      background: #003366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0 auto 15px auto;
+    }
+
+    .list-name {
+      color: #003366;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .list-slogan {
+      color: #666;
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .member-card {
+      text-align: center;
+      padding: 20px 15px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .member-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .member-photo {
+      width: 80px;
+      height: 80px;
       object-fit: cover;
       border-radius: 50%;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       border: 3px solid #003366;
     }
 
-    .candidate-profile h3 {
+    .member-role {
       color: #003366;
-      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .candidate-profile p {
-      font-size: 0.95rem;
+    .member-name {
       color: #333;
+      font-weight: 600;
+      margin-bottom: 5px;
     }
 
-    @media(max-width: 600px) {
-      .candidates-list {
-        flex-direction: column;
-        align-items: center;
+    .member-course {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .list-proposal {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f0f8ff;
+      border-radius: 10px;
+      border-left: 4px solid #00aaff;
+    }
+
+    .proposal-title {
+      color: #003366;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .proposal-text {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    @media(max-width: 768px) {
+      .lists-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .members-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+      
+      .container {
+        padding: 20px 15px;
       }
     }
   </style>
@@ -72,40 +170,219 @@
   <div id="menu"></div>
 
   <div class="container">
-    <h1>Conoce a los Candidatos</h1>
+    <h1>Listas de Candidatos</h1>
+    <p class="subtitle">Conoce las propuestas y miembros de cada lista para el Consejo Estudiantil</p>
 
-    <div class="candidates-list">
-      <!-- Candidato A -->
-      <div class="candidate-profile">
-        <img src="perfilb.png" alt="Candidato A" />
-        <h3>Candidato A</h3>
-        <p><strong>Curso:</strong> 3ro BGU</p>
-        <p><strong>Propuesta:</strong> Mejora de áreas verdes, creación de club de tecnología, más actividades deportivas.</p>
+    <div class="lists-container">
+      
+      <!-- LISTA 1 -->
+      <div class="candidate-list">
+        <div class="list-header">
+          <div class="list-number">1</div>
+          <div class="list-name">Lista "Unión Estudiantil"</div>
+          <div class="list-slogan">"Juntos construimos el futuro"</div>
+        </div>
+
+        <div class="members-grid">
+          <div class="member-card">
+            <img src="perfilb.png" alt="Presidente" class="member-photo">
+            <div class="member-role">Presidente</div>
+            <div class="member-name">Ana García</div>
+            <div class="member-course">3ro BGU - A</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilc.png" alt="Vicepresidente" class="member-photo">
+            <div class="member-role">Vicepresidente</div>
+            <div class="member-name">Carlos Mendoza</div>
+            <div class="member-course">3ro BGU - B</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilh.webp" alt="Secretaria" class="member-photo">
+            <div class="member-role">Secretaria</div>
+            <div class="member-name">María López</div>
+            <div class="member-course">2do BGU - A</div>
+          </div>
+
+          <div class="member-card">
+            <img src="imagesd.png" alt="Tesorero" class="member-photo">
+            <div class="member-role">Tesorero</div>
+            <div class="member-name">David Ruiz</div>
+            <div class="member-course">2do BGU - C</div>
+          </div>
+        </div>
+
+        <div class="list-proposal">
+          <div class="proposal-title">
+            <i class="bx bx-bulb"></i>
+            Propuestas Principales
+          </div>
+          <div class="proposal-text">
+            • Mejora de áreas verdes y espacios recreativos<br>
+            • Creación de club de tecnología y robótica<br>
+            • Organización de actividades deportivas inter-cursos<br>
+            • Implementación de buzón de sugerencias digital
+          </div>
+        </div>
       </div>
 
-      <!-- Candidato B -->
-      <div class="candidate-profile">
-        <img src="perfilc.png" alt="Candidato B" />
-        <h3>Candidato B</h3>
-        <p><strong>Curso:</strong> 2do BGU</p>
-        <p><strong>Propuesta:</strong> Biblioteca digital, torneos estudiantiles, charlas motivacionales cada mes.</p>
+      <!-- LISTA 2 -->
+      <div class="candidate-list">
+        <div class="list-header">
+          <div class="list-number">2</div>
+          <div class="list-name">Lista "Innovación Estudiantil"</div>
+          <div class="list-slogan">"Transformando la educación"</div>
+        </div>
+
+        <div class="members-grid">
+          <div class="member-card">
+            <img src="imagesd.png" alt="Presidente" class="member-photo">
+            <div class="member-role">Presidente</div>
+            <div class="member-name">Luis Vargas</div>
+            <div class="member-course">3ro BGU - C</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilb.png" alt="Vicepresidenta" class="member-photo">
+            <div class="member-role">Vicepresidenta</div>
+            <div class="member-name">Sofia Torres</div>
+            <div class="member-course">2do BGU - B</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilc.png" alt="Secretario" class="member-photo">
+            <div class="member-role">Secretario</div>
+            <div class="member-name">Miguel Santos</div>
+            <div class="member-course">2do BGU - A</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilh.webp" alt="Tesorera" class="member-photo">
+            <div class="member-role">Tesorera</div>
+            <div class="member-name">Isabella Cruz</div>
+            <div class="member-course">1ro BGU - B</div>
+          </div>
+        </div>
+
+        <div class="list-proposal">
+          <div class="proposal-title">
+            <i class="bx bx-bulb"></i>
+            Propuestas Principales
+          </div>
+          <div class="proposal-text">
+            • Biblioteca digital con recursos interactivos<br>
+            • Torneos estudiantiles y competencias académicas<br>
+            • Charlas motivacionales mensuales con invitados<br>
+            • Plataforma digital para comunicación estudiantil
+          </div>
+        </div>
       </div>
 
-      <!-- Candidato C -->
-      <div class="candidate-profile">
-        <img src="perfilh.webp" alt="Candidato C" />
-        <h3>Candidato C</h3>
-        <p><strong>Curso:</strong> 1ro BGU</p>
-        <p><strong>Propuesta:</strong> Reciclaje escolar, buzón de sugerencias, campañas de concientización.</p>
+      <!-- LISTA 3 -->
+      <div class="candidate-list">
+        <div class="list-header">
+          <div class="list-number">3</div>
+          <div class="list-name">Lista "Verde y Futuro"</div>
+          <div class="list-slogan">"Por un colegio sostenible"</div>
+        </div>
+
+        <div class="members-grid">
+          <div class="member-card">
+            <img src="perfilh.webp" alt="Presidente" class="member-photo">
+            <div class="member-role">Presidente</div>
+            <div class="member-name">Camila Herrera</div>
+            <div class="member-course">2do BGU - C</div>
+          </div>
+
+          <div class="member-card">
+            <img src="imagesd.png" alt="Vicepresidente" class="member-photo">
+            <div class="member-role">Vicepresidente</div>
+            <div class="member-name">Andrés Morales</div>
+            <div class="member-course">2do BGU - A</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilb.png" alt="Secretaria" class="member-photo">
+            <div class="member-role">Secretaria</div>
+            <div class="member-name">Valeria Jiménez</div>
+            <div class="member-course">1ro BGU - C</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilc.png" alt="Tesorero" class="member-photo">
+            <div class="member-role">Tesorero</div>
+            <div class="member-name">Diego Castillo</div>
+            <div class="member-course">1ro BGU - A</div>
+          </div>
+        </div>
+
+        <div class="list-proposal">
+          <div class="proposal-title">
+            <i class="bx bx-bulb"></i>
+            Propuestas Principales
+          </div>
+          <div class="proposal-text">
+            • Programa de reciclaje escolar integral<br>
+            • Huerto estudiantil y educación ambiental<br>
+            • Campañas de concientización ecológica<br>
+            • Reducción del uso de plásticos en la institución
+          </div>
+        </div>
       </div>
 
-      <!-- Candidato D -->
-      <div class="candidate-profile">
-        <img src="imagesd.png" alt="Candidato D" />
-        <h3>Candidato D</h3>
-        <p><strong>Curso:</strong> 3ro BGU</p>
-        <p><strong>Propuesta:</strong> Semana cultural, inclusión estudiantil, app para comunicarse con docentes.</p>
+      <!-- LISTA 4 -->
+      <div class="candidate-list">
+        <div class="list-header">
+          <div class="list-number">4</div>
+          <div class="list-name">Lista "Cultura y Arte"</div>
+          <div class="list-slogan">"Expresando nuestra identidad"</div>
+        </div>
+
+        <div class="members-grid">
+          <div class="member-card">
+            <img src="perfilc.png" alt="Presidente" class="member-photo">
+            <div class="member-role">Presidente</div>
+            <div class="member-name">Roberto Vega</div>
+            <div class="member-course">3ro BGU - A</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilh.webp" alt="Vicepresidenta" class="member-photo">
+            <div class="member-role">Vicepresidenta</div>
+            <div class="member-name">Daniela Flores</div>
+            <div class="member-course">2do BGU - B</div>
+          </div>
+
+          <div class="member-card">
+            <img src="imagesd.png" alt="Secretario" class="member-photo">
+            <div class="member-role">Secretario</div>
+            <div class="member-name">Fernando Paz</div>
+            <div class="member-course">2do BGU - C</div>
+          </div>
+
+          <div class="member-card">
+            <img src="perfilb.png" alt="Tesorera" class="member-photo">
+            <div class="member-role">Tesorera</div>
+            <div class="member-name">Gabriela Rojas</div>
+            <div class="member-course">1ro BGU - B</div>
+          </div>
+        </div>
+
+        <div class="list-proposal">
+          <div class="proposal-title">
+            <i class="bx bx-bulb"></i>
+            Propuestas Principales
+          </div>
+          <div class="proposal-text">
+            • Semana cultural anual con presentaciones<br>
+            • Talleres de arte, música y teatro<br>
+            • Inclusión de todas las expresiones estudiantiles<br>
+            • App móvil para comunicación con docentes
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 

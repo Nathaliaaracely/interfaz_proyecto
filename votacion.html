@@ -37,24 +37,187 @@
     .candidate-card {
       background: #f9fafb;
       border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      width: 220px;
-      padding: 15px;
+      border-radius: 15px;
+      width: 320px;
+      padding: 20px;
       text-align: center;
-      transition: transform .3s, border-color .3s;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
       cursor: pointer;
+      position: relative;
     }
 
-    .candidate-card:hover   { transform: translateY(-5px); border-color: #00aaff; }
-    .candidate-card.selected{ border-color: #00aaff; background: #e0f7ff; }
+    .candidate-card:hover   { 
+      transform: translateY(-8px); 
+      border-color: #00aaff; 
+      box-shadow: 0 12px 30px rgba(0,170,255,0.25);
+    }
+    
+    .candidate-card:hover .tooltip {
+      pointer-events: auto;
+    }
+    
+    .candidate-card.selected{ 
+      border-color: #00aaff; 
+      background: #e0f7ff;
+      box-shadow: 0 8px 25px rgba(0,170,255,0.2);
+      transform: translateY(-5px);
+    }
 
-    .candidate-card input  { display: none; }
+    .candidate-card input[type="radio"] {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      transform: scale(1.5);
+      accent-color: #007bff;
+    }
+
+    .list-number {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      background: #003366;
+      color: white;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border: 3px solid white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
 
     .candidate-card img {
-      width: 100px; height: 100px;
-      border-radius: 50%; object-fit: cover;
-      margin-bottom: 10px;
+      width: 80px; 
+      height: 80px;
+      border-radius: 50%; 
+      object-fit: cover;
+      margin-bottom: 15px;
       border: 3px solid #003366;
+    }
+
+    .candidate-card h3 {
+      color: #003366;
+      margin: 10px 0 5px 0;
+      font-size: 1.1rem;
+      line-height: 1.3;
+    }
+
+    .slogan {
+      color: #666;
+      font-style: italic;
+      font-size: 0.85rem;
+      margin-bottom: 15px;
+      font-weight: 300;
+    }
+
+    .list-members {
+      text-align: left;
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    .member {
+      margin: 6px 0;
+      color: #555;
+      line-height: 1.3;
+    }
+
+    .member strong {
+      color: #003366;
+      font-weight: 600;
+    }
+
+    /* Tooltip para propuestas */
+    .tooltip {
+      position: absolute;
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      min-width: 280px;
+      max-width: 320px;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
+      text-align: left;
+      pointer-events: none;
+      backdrop-filter: blur(10px);
+    }
+
+    .tooltip.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Flecha del tooltip cuando está debajo */
+    .tooltip::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      margin-left: -8px;
+      border-width: 0 8px 8px 8px;
+      border-style: solid;
+      border-color: transparent transparent #2c3e50 transparent;
+    }
+
+    /* Flecha del tooltip cuando está arriba */
+    .tooltip.tooltip-above::before {
+      top: auto;
+      bottom: -8px;
+      border-width: 8px 8px 0 8px;
+      border-color: #2c3e50 transparent transparent transparent;
+    }
+
+    .tooltip h4 {
+      margin: 0 0 15px 0;
+      color: #3498db;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-bottom: 2px solid #34495e;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tooltip ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tooltip li {
+      margin: 12px 0;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.6;
+      font-size: 0.85rem;
+      color: #ecf0f1;
+    }
+
+    .tooltip li:before {
+      content: "✨";
+      position: absolute;
+      left: 0;
+      color: #3498db;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .tooltip li:hover {
+      color: #3498db;
+      transition: color 0.2s ease;
     }
 
     .submit-btn {
@@ -78,6 +241,23 @@
       font-size: 1.1rem;
       font-weight: bold;
     }
+
+    @media (max-width: 768px) {
+      .candidates {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .candidate-card {
+        width: 100%;
+        max-width: 350px;
+      }
+      
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -86,7 +266,7 @@
 
   <div class="container">
     <h1>Votación Estudiantil</h1>
-    <p style="text-align:center;">Selecciona al candidato de tu preferencia</p>
+    <p style="text-align:center;">Selecciona la lista de tu preferencia</p>
 
     <form id="voteForm">
       <div class="candidates" id="listaCandidatos"></div>
@@ -100,62 +280,211 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      console.log("🔄 Página cargada - Iniciando votación");
+      
+      // LIMPIAR DATOS CORRUPTOS DEL LOCALSTORAGE
+      console.log("🧹 Limpiando localStorage de candidatos...");
+      localStorage.removeItem("candidates");
+      
       // Cargar menú
       fetch("menu.html")
         .then(res => res.text())
-        .then(html => { document.getElementById("menu").innerHTML = html; });
+        .then(html => { 
+          document.getElementById("menu").innerHTML = html; 
+          console.log("✅ Menú cargado");
+        });
+
+      // Listas completas de candidatos (basadas en candidatos.html)
+      const listasCandidatos = [
+        {
+          numero: 1,
+          nombre: "Lista \"Unión Estudiantil\"",
+          slogan: "Juntos construimos el futuro",
+          presidente: "Ana García",
+          vicepresidente: "Carlos Mendoza",
+          secretario: "María López",
+          tesorero: "David Ruiz",
+          photo: "perfilb.png",
+          propuestas: [
+            "Mejora de áreas verdes y espacios recreativos",
+            "Creación de club de tecnología y robótica", 
+            "Organización de actividades deportivas inter-cursos",
+            "Implementación de buzón de sugerencias digital"
+          ]
+        },
+        {
+          numero: 2,
+          nombre: "Lista \"Innovación Estudiantil\"",
+          slogan: "Transformando la educación",
+          presidente: "Luis Vargas",
+          vicepresidente: "Sofia Torres",
+          secretario: "Miguel Santos",
+          tesorero: "Isabella Cruz",
+          photo: "imagesd.png",
+          propuestas: [
+            "Biblioteca digital con recursos interactivos",
+            "Torneos estudiantiles y competencias académicas",
+            "Charlas motivacionales mensuales con invitados",
+            "Plataforma digital para comunicación estudiantil"
+          ]
+        },
+        {
+          numero: 3,
+          nombre: "Lista \"Verde y Futuro\"",
+          slogan: "Por un colegio sostenible",
+          presidente: "Camila Herrera",
+          vicepresidente: "Andrés Morales",
+          secretario: "Valeria Jiménez",
+          tesorero: "Diego Castillo",
+          photo: "perfilh.webp",
+          propuestas: [
+            "Programa de reciclaje escolar integral",
+            "Huerto estudiantil y educación ambiental",
+            "Campañas de concientización ecológica",
+            "Reducción del uso de plásticos en la institución"
+          ]
+        },
+        {
+          numero: 4,
+          nombre: "Lista \"Cultura y Arte\"",
+          slogan: "Expresando nuestra identidad",
+          presidente: "Roberto Vega",
+          vicepresidente: "Daniela Flores",
+          secretario: "Fernando Paz",
+          tesorero: "Gabriela Rojas",
+          photo: "perfilc.png",
+          propuestas: [
+            "Semana cultural anual con presentaciones",
+            "Talleres de arte, música y teatro",
+            "Inclusión de todas las expresiones estudiantiles",
+            "App móvil para comunicación con docentes"
+          ]
+        }
+      ];
+
+      // USAR SIEMPRE LAS LISTAS PREDEFINIDAS PARA EVITAR ERRORES
+      let candidatos = listasCandidatos;
+      
+      // También guardar en localStorage para consistencia
+      localStorage.setItem("candidates", JSON.stringify(candidatos));
+      
+      console.log("📋 Candidatos cargados:", candidatos.length, "listas");
+      console.log("🔍 Verificando datos de cada lista:");
+      candidatos.forEach((lista, i) => {
+        console.log(`Lista ${i + 1}:`, {
+          numero: lista.numero,
+          nombre: lista.nombre,
+          presidente: lista.presidente,
+          photo: lista.photo
+        });
+      });
 
       const lista = document.getElementById("listaCandidatos");
-      const candidatos = JSON.parse(localStorage.getItem("candidates")) || [];
-      const votoInicio = new Date(localStorage.getItem("voto_inicio"));
-      const votoFin    = new Date(localStorage.getItem("voto_fin"));
-      const ahora      = new Date();
-      const submitBtn  = document.querySelector(".submit-btn");
-      const resultMsg  = document.getElementById("resultMessage");
+      const submitBtn = document.querySelector(".submit-btn");
+      const resultMsg = document.getElementById("resultMessage");
+      
+      console.log("🎯 Elementos obtenidos:", {lista, submitBtn, resultMsg});
 
-      // Verificar tiempo de votación
-      if (!votoInicio || !votoFin || isNaN(votoInicio) || isNaN(votoFin)) {
-        resultMsg.textContent = "⚠️ Fechas de votación no configuradas.";
-        resultMsg.style.color = "red";
+      // Verificar si el usuario ya votó
+      const usuarioActual = localStorage.getItem("usuarioActual");
+      const votosRealizados = JSON.parse(localStorage.getItem("votosRealizados")) || {};
+      
+      console.log("👤 Usuario actual:", usuarioActual);
+      console.log("🗳️ Votos realizados:", votosRealizados);
+      
+      if (votosRealizados[usuarioActual]) {
+        console.log("❌ Usuario ya votó");
+        resultMsg.innerHTML = `✅ Ya has votado por <strong>${votosRealizados[usuarioActual]}</strong>. <br>¡Gracias por participar!`;
+        resultMsg.style.color = "green";
+        resultMsg.style.fontSize = "1.3rem";
         lista.style.display = "none";
         submitBtn.style.display = "none";
         return;
       }
 
-      if (ahora < votoInicio) {
-        resultMsg.textContent = "⏳ La votación aún no ha comenzado.";
-        resultMsg.style.color = "orange";
-        lista.style.display = "none";
-        submitBtn.style.display = "none";
-        return;
-      }
+      // MOSTRAR SIEMPRE LAS LISTAS - Sin validaciones de fecha
+      console.log("✅ Mostrando listas de candidatos - INICIO");
 
-      if (ahora > votoFin) {
-        resultMsg.textContent = "🛑 La votación ya ha finalizado.";
-        resultMsg.style.color = "red";
-        lista.style.display = "none";
-        submitBtn.style.display = "none";
-        return;
-      }
-
-      // Si no hay candidatos
-      if (candidatos.length === 0) {
-        lista.innerHTML = '<p style="text-align:center; color:red;">No hay candidatos disponibles.</p>';
-        submitBtn.disabled = true;
-        return;
-      }
-
-      // Renderizar candidatos
-      candidatos.forEach(c => {
+      // Renderizar listas de candidatos
+      candidatos.forEach((listaCandidato, index) => {
+        console.log(`🏛️ Renderizando lista ${index + 1}:`, listaCandidato.nombre);
+        console.log(`📋 Datos de la lista:`, listaCandidato);
+        
+        // Validar que todos los campos existen
+        const numero = listaCandidato.numero || (index + 1);
+        const nombre = listaCandidato.nombre || `Lista ${index + 1}`;
+        const slogan = listaCandidato.slogan || "Sin slogan";
+        const presidente = listaCandidato.presidente || "Sin presidente";
+        const vicepresidente = listaCandidato.vicepresidente || "Sin vicepresidente";
+        const secretario = listaCandidato.secretario || "Sin secretario";
+        const tesorero = listaCandidato.tesorero || "Sin tesorero";
+        const photo = listaCandidato.photo || "perfildefault.png";
+        const propuestas = listaCandidato.propuestas || [];
+        
         const label = document.createElement("label");
         label.className = "candidate-card";
         label.innerHTML = `
-          <input type="radio" name="candidate" value="${c.name}">
-          <img src="${c.photo}" alt="${c.name}">
-          <strong>${c.name}</strong>
+          <input type="radio" name="candidate" value="${nombre}">
+          <div class="list-number">${numero}</div>
+          <img src="${photo}" alt="${nombre}">
+          <h3>${nombre}</h3>
+          <p class="slogan">"${slogan}"</p>
+          <div class="list-members">
+            <div class="member"><strong>Presidente:</strong> ${presidente}</div>
+            <div class="member"><strong>Vicepresidente:</strong> ${vicepresidente}</div>
+            <div class="member"><strong>Secretario/a:</strong> ${secretario}</div>
+            <div class="member"><strong>Tesorero/a:</strong> ${tesorero}</div>
+          </div>
         `;
+        
+        // Crear tooltip con propuestas si existen
+        if (propuestas.length > 0) {
+          const tooltip = document.createElement("div");
+          tooltip.className = "tooltip";
+          tooltip.innerHTML = `
+            <h4>🎯 Propuestas de ${nombre.replace(/Lista "|"/g, '').replace('Unión Estudiantil', 'Unión Estudiantil').replace('Innovación Estudiantil', 'Innovación Estudiantil').replace('Verde y Futuro', 'Verde y Futuro').replace('Cultura y Arte', 'Cultura y Arte')}</h4>
+            <ul>
+              ${propuestas.map(prop => `<li>${prop}</li>`).join('')}
+            </ul>
+          `;
+          label.appendChild(tooltip);
+          
+          // Eventos para mostrar/ocultar tooltip
+          label.addEventListener("mouseenter", (e) => {
+            const rect = label.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Posicionar el tooltip debajo de la tarjeta por defecto
+            tooltip.style.top = `${label.offsetHeight + 10}px`;
+            tooltip.style.left = "50%";
+            tooltip.style.transform = "translateX(-50%)";
+            
+            // Si no hay espacio suficiente abajo, posicionar arriba
+            const tooltipHeight = 200; // altura estimada del tooltip
+            const cardBottom = rect.bottom;
+            const spaceBelow = viewportHeight - (cardBottom - scrollTop);
+            
+            if (spaceBelow < tooltipHeight) {
+              tooltip.style.top = `-${tooltipHeight + 10}px`;
+              tooltip.classList.add("tooltip-above");
+            } else {
+              tooltip.classList.remove("tooltip-above");
+            }
+            
+            tooltip.classList.add("show");
+          });
+          
+          label.addEventListener("mouseleave", () => {
+            tooltip.classList.remove("show");
+          });
+        }
+        
         lista.appendChild(label);
       });
+      
+      console.log("🎨 Listas renderizadas completamente");
+      console.log("📊 Total de elementos en lista:", lista.children.length);
 
       // Resaltar candidato seleccionado
       document.querySelectorAll('.candidate-card input').forEach(input => {
@@ -177,6 +506,13 @@
         }
 
         const voto = seleccionado.value;
+        
+        // Registrar el voto del usuario para evitar votos duplicados
+        const votosRealizados = JSON.parse(localStorage.getItem("votosRealizados")) || {};
+        votosRealizados[usuarioActual] = voto;
+        localStorage.setItem("votosRealizados", JSON.stringify(votosRealizados));
+        
+        // Actualizar conteo de votos
         const votos = JSON.parse(localStorage.getItem("votes")) || {};
         votos[voto] = (votos[voto] || 0) + 1;
         localStorage.setItem("votes", JSON.stringify(votos));
