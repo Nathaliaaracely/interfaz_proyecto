@@ -12,6 +12,8 @@
     <li><a href="candidatos.html" data-i18n="navCandidates">Candidatos</a></li>
     <li><a href="votacion.html"   data-i18n="navVote">Votar</a></li>
     <li><a href="resultados.html" data-i18n="navResults">Resultados</a></li>
+    <li><a href="reseñas.html" data-i18n="navReviews">Reseñas</a></li>
+    <li><a href="contacto.html" data-i18n="navContact">Contacto</a></li>
     <li><a href="inicio.html" data-i18n="navLogout">Cerrar Sesión</a></li>
   </ul>
 
@@ -40,6 +42,8 @@
     else if(/vot(a|o|ación)/.test(q))                     location.href="votacion.html";
     else if(q.includes("resultado"))                      location.href="resultados.html";
     else if(q.includes("inicio"))                         location.href="inicio2.html";
+    else if(q.includes("reseña")||q.includes("opinión")||q.includes("experiencia")) location.href="reseñas.html";
+    else if(q.includes("contacto")||q.includes("comentario")) location.href="contacto.html";
     else alert("No se encontraron resultados para: "+q);
   });
 

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reseñas Estudiantiles - VotoUni</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" />
+  <link rel="stylesheet" href="menu.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body, html {
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('fondo.png') no-repeat center center fixed;
+      background-size: cover; color: #333;
+    }
+    .overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: -1;
+    }
+    .container {
+      max-width: 1000px; 
+      margin: 120px auto 50px auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #003366;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+    }
+    .subtitle {
+      text-align: center; 
+      margin-bottom: 40px; 
+      color: #666; 
+      font-size: 18px;
+    }
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 40px;
+      background: rgba(0, 51, 102, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #003366;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 20px;
+      border: 2px solid #003366;
+      background: transparent;
+      color: #003366;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #003366;
+      color: white;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    .review-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      border-left: 5px solid #003366;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    }
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .student-info h3 {
+      margin: 0;
+      color: #003366;
+      font-size: 1.1rem;
+    }
+    .student-meta {
+      font-size: 12px;
+      color: #666;
+      margin-top: 3px;
+    }
+    .rating {
+      display: flex;
+      gap: 2px;
+    }
+    .rating i {
+      color: #FFD700;
+      font-size: 16px;
+    }
+    .review-content {
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+    .review-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #888;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+    .no-reviews {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    .no-reviews i {
+      font-size: 4rem;
+      color: #ddd;
+      margin-bottom: 20px;
+    }
+    .add-review-btn {
+      display: inline-block;
+      background: #003366;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 25px;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+    .add-review-btn:hover {
+      background: #002244;
+      transform: translateY(-2px);
+    }
+    @media (max-width: 768px) {
+      .container {
+        margin: 100px 20px 20px 20px;
+        padding: 20px;
+      }
+      .reviews-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .filters {
+        justify-content: center;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div id="menu"></div>
+
+  <div class="container">
+    <h1><i class='bx bx-star'></i> Reseñas Estudiantiles</h1>
+    <p class="subtitle">
+      Conoce las experiencias y opiniones de nuestros estudiantes
+    </p>
+
+    <!-- Estadísticas -->
+    <div class="stats-container">
+      <div class="stat-item">
+        <div class="stat-number" id="totalReviews">0</div>
+        <div class="stat-label">Total de Reseñas</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="averageRating">0.0</div>
+        <div class="stat-label">Calificación Promedio</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="topRating">0</div>
+        <div class="stat-label">Reseñas 5 Estrellas</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters">
+      <span style="font-weight: bold; color: #003366;">Filtrar por:</span>
+      <button class="filter-btn active" data-filter="all">Todas</button>
+      <button class="filter-btn" data-filter="5">5 Estrellas</button>
+      <button class="filter-btn" data-filter="4">4 Estrellas</button>
+      <button class="filter-btn" data-filter="3">3 Estrellas</button>
+      <button class="filter-btn" data-filter="2">2 Estrellas</button>
+      <button class="filter-btn" data-filter="1">1 Estrella</button>
+    </div>
+
+    <!-- Grid de reseñas -->
+    <div class="reviews-grid" id="reviewsGrid">
+      <!-- Las reseñas se cargarán aquí dinámicamente -->
+    </div>
+
+    <!-- Mensaje cuando no hay reseñas -->
+    <div class="no-reviews" id="noReviews" style="display: none;">
+      <i class='bx bx-comment-x'></i>
+      <h3>¡Aún no hay reseñas!</h3>
+      <p>Sé el primero en compartir tu experiencia como estudiante.</p>
+      <a href="contacto.html" class="add-review-btn">
+        <i class='bx bx-plus'></i> Escribir Primera Reseña
+      </a>
+    </div>
+
+    <!-- Botón para agregar reseña -->
+    <div style="text-align: center; margin-top: 40px;">
+      <a href="contacto.html" class="add-review-btn">
+        <i class='bx bx-edit'></i> Escribir una Reseña
+      </a>
+    </div>
+  </div>
+
+<script src="menu.js"></script>
+<script>
+  // Cargar menú dinámico
+  fetch("menu.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("menu").innerHTML = data;
+    });
+
+  let todasLasReseñas = [];
+  let filtroActual = 'all';
+
+  // Cargar reseñas del localStorage
+  function cargarReseñas() {
+    const reseñas = localStorage.getItem('resenasEstudiantes');
+    if (reseñas) {
+      todasLasReseñas = JSON.parse(reseñas);
+    } else {
+      todasLasReseñas = [];
+    }
+    
+    actualizarEstadisticas();
+    mostrarReseñas();
+  }
+
+  // Actualizar estadísticas
+  function actualizarEstadisticas() {
+    const total = todasLasReseñas.length;
+    const sumaCalificaciones = todasLasReseñas.reduce((sum, review) => sum + review.calificacion, 0);
+    const promedio = total > 0 ? (sumaCalificaciones / total).toFixed(1) : 0.0;
+    const cincoEstrellas = todasLasReseñas.filter(review => review.calificacion === 5).length;
+
+    document.getElementById('totalReviews').textContent = total;
+    document.getElementById('averageRating').textContent = promedio;
+    document.getElementById('topRating').textContent = cincoEstrellas;
+  }
+
+  // Mostrar reseñas
+  function mostrarReseñas() {
+    const grid = document.getElementById('reviewsGrid');
+    const noReviewsMsg = document.getElementById('noReviews');
+    
+    let reseñasFiltradas = todasLasReseñas;
+    
+    // Aplicar filtro
+    if (filtroActual !== 'all') {
+      reseñasFiltradas = todasLasReseñas.filter(review => 
+        review.calificacion === parseInt(filtroActual)
+      );
+    }
+
+    if (todasLasReseñas.length === 0) {
+      grid.style.display = 'none';
+      noReviewsMsg.style.display = 'block';
+      return;
+    }
+
+    grid.style.display = 'grid';
+    noReviewsMsg.style.display = 'none';
+
+    if (reseñasFiltradas.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+          <i class='bx bx-filter' style="font-size: 3rem; margin-bottom: 15px;"></i>
+          <h3>No hay reseñas con ${filtroActual} estrella${filtroActual > 1 ? 's' : ''}</h3>
+          <p>Prueba con otro filtro o <a href="contacto.html">escribe una reseña</a>.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Ordenar por fecha (más recientes primero)
+    reseñasFiltradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+    grid.innerHTML = reseñasFiltradas.map(review => `
+      <div class="review-card">
+        <div class="review-header">
+          <div class="student-info">
+            <h3>${review.nombre}</h3>
+            <div class="student-meta">
+              ${review.programa} • ${review.semestre}
+            </div>
+          </div>
+          <div class="rating">
+            ${generarEstrellas(review.calificacion)}
+          </div>
+        </div>
+        
+        <div class="review-content">
+          "${review.mensaje}"
+        </div>
+        
+        <div class="review-footer">
+          <span><i class='bx bx-calendar'></i> ${review.fecha}</span>
+          <span>
+            ${review.anonimo ? '<i class="bx bx-user-x"></i> Anónimo' : '<i class="bx bx-user-check"></i> Verificado'}
+          </span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Generar estrellas para mostrar calificación
+  function generarEstrellas(calificacion) {
+    let estrellas = '';
+    for (let i = 1; i <= 5; i++) {
+      if (i <= calificacion) {
+        estrellas += '<i class="bx bxs-star"></i>';
+      } else {
+        estrellas += '<i class="bx bx-star"></i>';
+      }
+    }
+    return estrellas;
+  }
+
+  // Manejar filtros
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('filter-btn')) {
+      // Remover clase active de todos los botones
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Agregar clase active al botón clickeado
+      e.target.classList.add('active');
+      
+      // Actualizar filtro
+      filtroActual = e.target.dataset.filter;
+      
+      // Mostrar reseñas filtradas
+      mostrarReseñas();
+    }
+  });
+
+  // Cargar reseñas al cargar la página
+  document.addEventListener('DOMContentLoaded', function() {
+    cargarReseñas();
+    
+    // Actualizar cada 30 segundos por si hay nuevas reseñas
+    setInterval(cargarReseñas, 30000);
+  });
+</script>
+</body>
+</html>

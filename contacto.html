@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formulario de Contacto - Reseñas Estudiantiles</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" />
+  <link rel="stylesheet" href="menu.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body, html {
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('fondo.png') no-repeat center center fixed;
+      background-size: cover; color: #333;
+    }
+    .overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: -1;
+    }
+    .form-container {
+      max-width: 800px; 
+      margin: 120px auto 50px auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #003366;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.2rem;
+    }
+    .subtitle {
+      text-align: center; 
+      margin-bottom: 30px; 
+      color: #666; 
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div id="menu"></div>
+  <div class="form-container">
+    <form id="contactForm">
+      <h1>Formulario de Contacto</h1>
+      <p class="subtitle">
+        Comparte tu experiencia y reseña como estudiante
+      </p>
+
+      <div id="messageContainer"></div>
+
+      <!-- Nombre del estudiante -->
+      <div class="input-box">
+        <label for="studentName" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+          Nombre completo del estudiante *
+        </label>
+        <input type="text" id="studentName" placeholder="Ingresa tu nombre completo" required />
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <!-- Email del estudiante -->
+      <div class="input-box">
+        <label for="studentEmail" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+          Correo electrónico *
+        </label>
+        <input type="email" id="studentEmail" placeholder="tu-email@ejemplo.com" required />
+        <i class='bx bx-envelope'></i>
+      </div>
+
+      <!-- Carrera o programa -->
+      <div class="input-box">
+        <label for="program" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+          Carrera o programa de estudios *
+        </label>
+        <input type="text" id="program" placeholder="Ej: Ingeniería en Sistemas" required />
+        <i class='bx bx-book'></i>
+      </div>
+
+      <!-- Año/Semestre -->
+      <div class="input-box">
+        <label for="semester" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+          Año/Semestre actual *
+        </label>
+        <select id="semester" required style="width: 100%; padding: 14px 45px 14px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 50px; color: #333; font-size: 14px; outline: none;">
+          <option value="">Selecciona tu nivel académico</option>
+          <option value="1er Semestre">1er Semestre</option>
+          <option value="2do Semestre">2do Semestre</option>
+          <option value="3er Semestre">3er Semestre</option>
+          <option value="4to Semestre">4to Semestre</option>
+          <option value="5to Semestre">5to Semestre</option>
+          <option value="6to Semestre">6to Semestre</option>
+          <option value="7mo Semestre">7mo Semestre</option>
+          <option value="8vo Semestre">8vo Semestre</option>
+          <option value="9no Semestre">9no Semestre</option>
+          <option value="10mo Semestre">10mo Semestre</option>
+          <option value="Graduado">Graduado</option>
+        </select>
+        <i class='bx bx-calendar'></i>
+      </div>
+
+      <!-- Calificación/Rating -->
+      <div class="input-box">
+        <label for="rating" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+          Calificación general de tu experiencia *
+        </label>
+        <div style="display: flex; align-items: center; padding: 10px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 50px;">
+          <div id="starRating" style="display: flex; gap: 5px;">
+            <i class='bx bx-star star-rating' data-rating="1" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
+            <i class='bx bx-star star-rating' data-rating="2" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
+            <i class='bx bx-star star-rating' data-rating="3" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
+            <i class='bx bx-star star-rating' data-rating="4" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
+            <i class='bx bx-star star-rating' data-rating="5" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
+          </div>
+          <span id="ratingText" style="margin-left: 15px; color: #666; font-size: 14px;">Selecciona una calificación</span>
+        </div>
+        <input type="hidden" id="selectedRating" required />
+      </div>
+
+      <!-- Área de reseña/mensaje -->
+      <div class="input-box">
+        <label for="reviewMessage" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+          Tu reseña y experiencia como estudiante *
+        </label>
+        <textarea 
+          id="reviewMessage" 
+          placeholder="Comparte tu experiencia, qué te gustó más, qué mejorarías, cómo ha sido tu proceso de aprendizaje, recomendaciones para otros estudiantes, etc..." 
+          required
+          rows="6"
+          style="width: 100%; padding: 15px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 15px; color: #333; font-size: 14px; outline: none; resize: vertical; min-height: 120px; font-family: 'Poppins', sans-serif;"
+        ></textarea>
+        <i class='bx bx-message-dots' style="top: 20px;"></i>
+      </div>
+
+      <!-- Checkbox de autorización -->
+      <div class="remember-forgot">
+        <label style="display: flex; align-items: center;">
+          <input type="checkbox" id="publishConsent" required style="margin-right: 8px;" /> 
+          Autorizo la publicación de mi reseña (anónima si lo deseo)
+        </label>
+      </div>
+
+      <!-- Checkbox para anonimato -->
+      <div class="remember-forgot">
+        <label style="display: flex; align-items: center;">
+          <input type="checkbox" id="anonymous" style="margin-right: 8px;" /> 
+          Publicar mi reseña de forma anónima
+        </label>
+      </div>
+
+      <button type="submit" class="btn">Enviar Reseña</button>
+
+      <div class="register-link">
+        <p><a href="inicio2.html">← Volver al inicio</a></p>
+      </div>
+    </form>
+  </div>
+
+<script src="menu.js"></script>
+<script>
+  // Cargar menú dinámico
+  fetch("menu.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("menu").innerHTML = data;
+    });
+
+  let selectedRating = 0;
+
+  // Manejo del sistema de calificación por estrellas
+  const stars = document.querySelectorAll('.star-rating');
+  const ratingText = document.getElementById('ratingText');
+  const hiddenRating = document.getElementById('selectedRating');
+
+  const ratingLabels = {
+    1: 'Muy malo - 1 estrella',
+    2: 'Malo - 2 estrellas', 
+    3: 'Regular - 3 estrellas',
+    4: 'Bueno - 4 estrellas',
+    5: 'Excelente - 5 estrellas'
+  };
+
+  stars.forEach(star => {
+    star.addEventListener('click', function() {
+      selectedRating = parseInt(this.dataset.rating);
+      hiddenRating.value = selectedRating;
+      updateStars();
+      ratingText.textContent = ratingLabels[selectedRating];
+    });
+
+    star.addEventListener('mouseover', function() {
+      const hoverRating = parseInt(this.dataset.rating);
+      highlightStars(hoverRating);
+    });
+  });
+
+  document.getElementById('starRating').addEventListener('mouseleave', function() {
+    updateStars();
+  });
+
+  function highlightStars(rating) {
+    stars.forEach((star, index) => {
+      if (index < rating) {
+        star.classList.remove('bx-star');
+        star.classList.add('bxs-star');
+        star.style.color = '#FFD700';
+      } else {
+        star.classList.remove('bxs-star');
+        star.classList.add('bx-star');
+        star.style.color = '#ddd';
+      }
+    });
+  }
+
+  function updateStars() {
+    highlightStars(selectedRating);
+  }
+
+  // Función para mostrar mensajes
+  function mostrarMensaje(mensaje, tipo = 'error') {
+    const container = document.getElementById('messageContainer');
+    container.innerHTML = '';
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = mensaje;
+    messageDiv.style.padding = '12px 20px';
+    messageDiv.style.borderRadius = '8px';
+    messageDiv.style.marginBottom = '20px';
+    messageDiv.style.border = '1px solid';
+    messageDiv.style.fontSize = '14px';
+    
+    if (tipo === 'success') {
+      messageDiv.style.backgroundColor = '#d4edda';
+      messageDiv.style.borderColor = '#c3e6cb';
+      messageDiv.style.color = '#155724';
+    } else if (tipo === 'warning') {
+      messageDiv.style.backgroundColor = '#fff3cd';
+      messageDiv.style.borderColor = '#ffeeba';
+      messageDiv.style.color = '#856404';
+    } else {
+      messageDiv.style.backgroundColor = '#f8d7da';
+      messageDiv.style.borderColor = '#f5c6cb';
+      messageDiv.style.color = '#721c24';
+    }
+    
+    container.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      container.innerHTML = '';
+    }, 5000);
+  }
+
+  // Función para guardar reseñas en localStorage
+  function guardarResena(resena) {
+    const resenas = JSON.parse(localStorage.getItem('resenasEstudiantes') || '[]');
+    resena.id = Date.now();
+    resena.fecha = new Date().toLocaleDateString('es-ES');
+    resenas.push(resena);
+    localStorage.setItem('resenasEstudiantes', JSON.stringify(resenas));
+  }
+
+  // Manejo del formulario
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // Obtener valores del formulario
+    const studentName = document.getElementById("studentName").value.trim();
+    const studentEmail = document.getElementById("studentEmail").value.trim();
+    const program = document.getElementById("program").value.trim();
+    const semester = document.getElementById("semester").value;
+    const reviewMessage = document.getElementById("reviewMessage").value.trim();
+    const publishConsent = document.getElementById("publishConsent").checked;
+    const anonymous = document.getElementById("anonymous").checked;
+
+    // Validaciones
+    if (!studentName || !studentEmail || !program || !semester || !reviewMessage) {
+      mostrarMensaje("Por favor, completa todos los campos obligatorios", 'warning');
+      return;
+    }
+
+    if (selectedRating === 0) {
+      mostrarMensaje("Por favor, selecciona una calificación con las estrellas", 'warning');
+      return;
+    }
+
+    if (!publishConsent) {
+      mostrarMensaje("Debes autorizar la publicación de tu reseña para continuar", 'warning');
+      return;
+    }
+
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(studentEmail)) {
+      mostrarMensaje("Por favor, ingresa un email válido", 'error');
+      return;
+    }
+
+    // Crear objeto de reseña
+    const resena = {
+      nombre: anonymous ? 'Estudiante Anónimo' : studentName,
+      email: studentEmail,
+      programa: program,
+      semestre: semester,
+      calificacion: selectedRating,
+      mensaje: reviewMessage,
+      anonimo: anonymous,
+      autorizado: publishConsent
+    };
+
+    // Guardar reseña
+    try {
+      guardarResena(resena);
+      mostrarMensaje("¡Reseña enviada exitosamente! Serás redirigido para ver todas las reseñas en 3 segundos...", 'success');
+      
+      // Limpiar formulario después de 2 segundos
+      setTimeout(() => {
+        document.getElementById("contactForm").reset();
+        selectedRating = 0;
+        hiddenRating.value = '';
+        updateStars();
+        ratingText.textContent = 'Selecciona una calificación';
+      }, 2000);
+      
+      // Redirigir a las reseñas después de 3 segundos
+      setTimeout(() => {
+        window.location.href = "reseñas.html";
+      }, 3000);
+      
+    } catch (error) {
+      mostrarMensaje("Hubo un error al enviar tu reseña. Por favor, intenta nuevamente.", 'error');
+    }
+  });
+</script>
+</body>
+</html>
