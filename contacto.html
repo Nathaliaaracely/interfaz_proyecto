@@ -47,8 +47,8 @@
   <div id="menu"></div>
   <div class="form-container">
     <form id="contactForm">
-      <h1>Formulario de Contacto</h1>
-      <p class="subtitle">
+      <h1 data-i18n="contactFormTitle">Formulario de Contacto</h1>
+      <p class="subtitle" data-i18n="contactSubtitle">
         Comparte tu experiencia y reseña como estudiante
       </p>
 
@@ -56,56 +56,56 @@
 
       <!-- Nombre del estudiante -->
       <div class="input-box">
-        <label for="studentName" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+        <label for="studentName" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="studentNameLabel">
           Nombre completo del estudiante *
         </label>
-        <input type="text" id="studentName" placeholder="Ingresa tu nombre completo" required />
+        <input type="text" id="studentName" data-i18n-placeholder="studentNamePlaceholder" placeholder="Ingresa tu nombre completo" required />
         <i class='bx bxs-user'></i>
       </div>
 
       <!-- Email del estudiante -->
       <div class="input-box">
-        <label for="studentEmail" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+        <label for="studentEmail" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="emailLabel">
           Correo electrónico *
         </label>
-        <input type="email" id="studentEmail" placeholder="tu-email@ejemplo.com" required />
+        <input type="email" id="studentEmail" data-i18n-placeholder="emailPlaceholder" placeholder="tu-email@ejemplo.com" required />
         <i class='bx bx-envelope'></i>
       </div>
 
       <!-- Carrera o programa -->
       <div class="input-box">
-        <label for="program" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+        <label for="program" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="programLabel">
           Carrera o programa de estudios *
         </label>
-        <input type="text" id="program" placeholder="Ej: Ingeniería en Sistemas" required />
+        <input type="text" id="program" data-i18n-placeholder="programPlaceholder" placeholder="Ej: Ingeniería en Sistemas" required />
         <i class='bx bx-book'></i>
       </div>
 
       <!-- Año/Semestre -->
       <div class="input-box">
-        <label for="semester" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+        <label for="semester" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="semesterLabel">
           Año/Semestre actual *
         </label>
         <select id="semester" required style="width: 100%; padding: 14px 45px 14px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 50px; color: #333; font-size: 14px; outline: none;">
-          <option value="">Selecciona tu nivel académico</option>
-          <option value="1er Semestre">1er Semestre</option>
-          <option value="2do Semestre">2do Semestre</option>
-          <option value="3er Semestre">3er Semestre</option>
-          <option value="4to Semestre">4to Semestre</option>
-          <option value="5to Semestre">5to Semestre</option>
-          <option value="6to Semestre">6to Semestre</option>
-          <option value="7mo Semestre">7mo Semestre</option>
-          <option value="8vo Semestre">8vo Semestre</option>
-          <option value="9no Semestre">9no Semestre</option>
-          <option value="10mo Semestre">10mo Semestre</option>
-          <option value="Graduado">Graduado</option>
+          <option value="" data-i18n="selectLevel">Selecciona tu nivel académico</option>
+          <option value="1er Semestre" data-i18n="semester1">1er Semestre</option>
+          <option value="2do Semestre" data-i18n="semester2">2do Semestre</option>
+          <option value="3er Semestre" data-i18n="semester3">3er Semestre</option>
+          <option value="4to Semestre" data-i18n="semester4">4to Semestre</option>
+          <option value="5to Semestre" data-i18n="semester5">5to Semestre</option>
+          <option value="6to Semestre" data-i18n="semester6">6to Semestre</option>
+          <option value="7mo Semestre" data-i18n="semester7">7mo Semestre</option>
+          <option value="8vo Semestre" data-i18n="semester8">8vo Semestre</option>
+          <option value="9no Semestre" data-i18n="semester9">9no Semestre</option>
+          <option value="10mo Semestre" data-i18n="semester10">10mo Semestre</option>
+          <option value="Graduado" data-i18n="graduated">Graduado</option>
         </select>
         <i class='bx bx-calendar'></i>
       </div>
 
       <!-- Calificación/Rating -->
       <div class="input-box">
-        <label for="rating" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+        <label for="rating" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="ratingLabel">
           Calificación general de tu experiencia *
         </label>
         <div style="display: flex; align-items: center; padding: 10px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 50px;">
@@ -116,18 +116,19 @@
             <i class='bx bx-star star-rating' data-rating="4" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
             <i class='bx bx-star star-rating' data-rating="5" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
           </div>
-          <span id="ratingText" style="margin-left: 15px; color: #666; font-size: 14px;">Selecciona una calificación</span>
+          <span id="ratingText" style="margin-left: 15px; color: #666; font-size: 14px;" data-i18n="selectRating">Selecciona una calificación</span>
         </div>
         <input type="hidden" id="selectedRating" required />
       </div>
 
       <!-- Área de reseña/mensaje -->
       <div class="input-box">
-        <label for="reviewMessage" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;">
+        <label for="reviewMessage" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="reviewLabel">
           Tu reseña y experiencia como estudiante *
         </label>
         <textarea 
           id="reviewMessage" 
+          data-i18n-placeholder="reviewPlaceholder"
           placeholder="Comparte tu experiencia, qué te gustó más, qué mejorarías, cómo ha sido tu proceso de aprendizaje, recomendaciones para otros estudiantes, etc..." 
           required
           rows="6"
@@ -140,7 +141,7 @@
       <div class="remember-forgot">
         <label style="display: flex; align-items: center;">
           <input type="checkbox" id="publishConsent" required style="margin-right: 8px;" /> 
-          Autorizo la publicación de mi reseña (anónima si lo deseo)
+          <span data-i18n="publishConsent">Autorizo la publicación de mi reseña (anónima si lo deseo)</span>
         </label>
       </div>
 
@@ -148,25 +149,174 @@
       <div class="remember-forgot">
         <label style="display: flex; align-items: center;">
           <input type="checkbox" id="anonymous" style="margin-right: 8px;" /> 
-          Publicar mi reseña de forma anónima
+          <span data-i18n="anonymousOption">Publicar mi reseña de forma anónima</span>
         </label>
       </div>
 
-      <button type="submit" class="btn">Enviar Reseña</button>
+      <button type="submit" class="btn" data-i18n="submitReview">Enviar Reseña</button>
 
       <div class="register-link">
-        <p><a href="inicio2.html">← Volver al inicio</a></p>
+        <p><a href="inicio2.html" data-i18n="backToHome">← Volver al inicio</a></p>
       </div>
     </form>
   </div>
 
 <script src="menu.js"></script>
 <script>
+  /* ————————————————————————————  SISTEMA DE TRADUCCIONES  ———————————————————————————— */
+  const translations = {
+    es: {
+      contactFormTitle: "Formulario de Contacto",
+      contactSubtitle: "Comparte tu experiencia y reseña como estudiante",
+      studentNameLabel: "Nombre completo del estudiante *",
+      studentNamePlaceholder: "Ingresa tu nombre completo",
+      emailLabel: "Correo electrónico *",
+      emailPlaceholder: "tu-email@ejemplo.com",
+      programLabel: "Carrera o programa de estudios *",
+      programPlaceholder: "Ej: Ingeniería en Sistemas",
+      semesterLabel: "Año/Semestre actual *",
+      selectLevel: "Selecciona tu nivel académico",
+      semester1: "1er Semestre", semester2: "2do Semestre", semester3: "3er Semestre",
+      semester4: "4to Semestre", semester5: "5to Semestre", semester6: "6to Semestre",
+      semester7: "7mo Semestre", semester8: "8vo Semestre", semester9: "9no Semestre",
+      semester10: "10mo Semestre", graduated: "Graduado",
+      ratingLabel: "Calificación general de tu experiencia *",
+      selectRating: "Selecciona una calificación",
+      reviewLabel: "Tu reseña y experiencia como estudiante *",
+      reviewPlaceholder: "Comparte tu experiencia, qué te gustó más, qué mejorarías, cómo ha sido tu proceso de aprendizaje, recomendaciones para otros estudiantes, etc...",
+      publishConsent: "Autorizo la publicación de mi reseña (anónima si lo deseo)",
+      anonymousOption: "Publicar mi reseña de forma anónima",
+      submitReview: "Enviar Reseña",
+      backToHome: "← Volver al inicio",
+      // Mensajes del sistema
+      fillAllFields: "Por favor, completa todos los campos obligatorios",
+      selectStarRating: "Por favor, selecciona una calificación con las estrellas",
+      authorizationRequired: "Debes autorizar la publicación de tu reseña para continuar",
+      invalidEmail: "Por favor, ingresa un email válido",
+      reviewSentSuccess: "¡Reseña enviada exitosamente! Serás redirigido para ver todas las reseñas en 3 segundos...",
+      reviewSentError: "Hubo un error al enviar tu reseña. Por favor, intenta nuevamente.",
+      // Calificaciones
+      veryBad: "Muy malo - 1 estrella",
+      bad: "Malo - 2 estrellas",
+      regular: "Regular - 3 estrellas",
+      good: "Bueno - 4 estrellas",
+      excellent: "Excelente - 5 estrellas",
+      anonymousStudent: "Estudiante Anónimo"
+    },
+    en: {
+      contactFormTitle: "Contact Form",
+      contactSubtitle: "Share your experience and review as a student",
+      studentNameLabel: "Full student name *",
+      studentNamePlaceholder: "Enter your full name",
+      emailLabel: "Email address *",
+      emailPlaceholder: "your-email@example.com",
+      programLabel: "Career or study program *",
+      programPlaceholder: "Ex: Systems Engineering",
+      semesterLabel: "Current Year/Semester *",
+      selectLevel: "Select your academic level",
+      semester1: "1st Semester", semester2: "2nd Semester", semester3: "3rd Semester",
+      semester4: "4th Semester", semester5: "5th Semester", semester6: "6th Semester",
+      semester7: "7th Semester", semester8: "8th Semester", semester9: "9th Semester",
+      semester10: "10th Semester", graduated: "Graduated",
+      ratingLabel: "Overall rating of your experience *",
+      selectRating: "Select a rating",
+      reviewLabel: "Your review and experience as a student *",
+      reviewPlaceholder: "Share your experience, what you liked most, what you would improve, how your learning process has been, recommendations for other students, etc...",
+      publishConsent: "I authorize the publication of my review (anonymous if I wish)",
+      anonymousOption: "Publish my review anonymously",
+      submitReview: "Submit Review",
+      backToHome: "← Back to home",
+      // System messages
+      fillAllFields: "Please complete all required fields",
+      selectStarRating: "Please select a rating with the stars",
+      authorizationRequired: "You must authorize the publication of your review to continue",
+      invalidEmail: "Please enter a valid email",
+      reviewSentSuccess: "Review sent successfully! You will be redirected to view all reviews in 3 seconds...",
+      reviewSentError: "There was an error sending your review. Please try again.",
+      // Ratings
+      veryBad: "Very bad - 1 star",
+      bad: "Bad - 2 stars",
+      regular: "Regular - 3 stars",
+      good: "Good - 4 stars",
+      excellent: "Excellent - 5 stars",
+      anonymousStudent: "Anonymous Student"
+    },
+    id: {
+      contactFormTitle: "Formulir Kontak",
+      contactSubtitle: "Bagikan pengalaman dan ulasan Anda sebagai siswa",
+      studentNameLabel: "Nama lengkap siswa *",
+      studentNamePlaceholder: "Masukkan nama lengkap Anda",
+      emailLabel: "Alamat email *",
+      emailPlaceholder: "email-anda@contoh.com",
+      programLabel: "Karir atau program studi *",
+      programPlaceholder: "Contoh: Teknik Sistem",
+      semesterLabel: "Tahun/Semester saat ini *",
+      selectLevel: "Pilih tingkat akademik Anda",
+      semester1: "Semester 1", semester2: "Semester 2", semester3: "Semester 3",
+      semester4: "Semester 4", semester5: "Semester 5", semester6: "Semester 6",
+      semester7: "Semester 7", semester8: "Semester 8", semester9: "Semester 9",
+      semester10: "Semester 10", graduated: "Lulus",
+      ratingLabel: "Penilaian keseluruhan pengalaman Anda *",
+      selectRating: "Pilih penilaian",
+      reviewLabel: "Ulasan dan pengalaman Anda sebagai siswa *",
+      reviewPlaceholder: "Bagikan pengalaman Anda, apa yang paling Anda sukai, apa yang akan Anda perbaiki, bagaimana proses pembelajaran Anda, rekomendasi untuk siswa lain, dll...",
+      publishConsent: "Saya mengizinkan publikasi ulasan saya (anonim jika saya inginkan)",
+      anonymousOption: "Publikasikan ulasan saya secara anonim",
+      submitReview: "Kirim Ulasan",
+      backToHome: "← Kembali ke beranda",
+      // System messages
+      fillAllFields: "Silakan lengkapi semua bidang yang diperlukan",
+      selectStarRating: "Silakan pilih rating dengan bintang",
+      authorizationRequired: "Anda harus mengizinkan publikasi ulasan Anda untuk melanjutkan",
+      invalidEmail: "Silakan masukkan email yang valid",
+      reviewSentSuccess: "Ulasan berhasil dikirim! Anda akan dialihkan untuk melihat semua ulasan dalam 3 detik...",
+      reviewSentError: "Terjadi kesalahan saat mengirim ulasan Anda. Silakan coba lagi.",
+      // Ratings
+      veryBad: "Sangat buruk - 1 bintang",
+      bad: "Buruk - 2 bintang",
+      regular: "Biasa - 3 bintang",
+      good: "Baik - 4 bintang",
+      excellent: "Sangat baik - 5 bintang",
+      anonymousStudent: "Siswa Anonim"
+    }
+  };
+
+  /* ————————————————————————————  IDIOMA ACTUAL  ———————————————————————————— */
+  let currentLang = localStorage.getItem("lang") || "es";
+
+  /* ————————————————————————————  APLICAR TRADUCCIÓN  ———————————————————————————— */
+  function applyTranslations() {
+    console.log("🌐 Aplicando traducción en contacto:", currentLang);
+    
+    // Traducir elementos con data-i18n
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (translations[currentLang] && translations[currentLang][key]) {
+        el.textContent = translations[currentLang][key];
+      }
+    });
+    
+    // Traducir placeholders
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (translations[currentLang] && translations[currentLang][key]) {
+        el.placeholder = translations[currentLang][key];
+      }
+    });
+    
+    // Actualizar labels de calificación
+    updateRatingLabels();
+  }
+
   // Cargar menú dinámico
   fetch("menu.html")
     .then(res => res.text())
     .then(data => {
       document.getElementById("menu").innerHTML = data;
+      // Aplicar traducciones después de cargar el menú
+      setTimeout(() => {
+        applyTranslations();
+      }, 100);
     });
 
   let selectedRating = 0;
@@ -176,19 +326,31 @@
   const ratingText = document.getElementById('ratingText');
   const hiddenRating = document.getElementById('selectedRating');
 
-  const ratingLabels = {
-    1: 'Muy malo - 1 estrella',
-    2: 'Malo - 2 estrellas', 
-    3: 'Regular - 3 estrellas',
-    4: 'Bueno - 4 estrellas',
-    5: 'Excelente - 5 estrellas'
-  };
+  function getRatingLabels() {
+    return {
+      1: translations[currentLang].veryBad,
+      2: translations[currentLang].bad,
+      3: translations[currentLang].regular,
+      4: translations[currentLang].good,
+      5: translations[currentLang].excellent
+    };
+  }
+
+  function updateRatingLabels() {
+    if (selectedRating > 0) {
+      const ratingLabels = getRatingLabels();
+      ratingText.textContent = ratingLabels[selectedRating];
+    } else {
+      ratingText.textContent = translations[currentLang].selectRating;
+    }
+  }
 
   stars.forEach(star => {
     star.addEventListener('click', function() {
       selectedRating = parseInt(this.dataset.rating);
       hiddenRating.value = selectedRating;
       updateStars();
+      const ratingLabels = getRatingLabels();
       ratingText.textContent = ratingLabels[selectedRating];
     });
 
@@ -278,30 +440,30 @@
 
     // Validaciones
     if (!studentName || !studentEmail || !program || !semester || !reviewMessage) {
-      mostrarMensaje("Por favor, completa todos los campos obligatorios", 'warning');
+      mostrarMensaje(translations[currentLang].fillAllFields, 'warning');
       return;
     }
 
     if (selectedRating === 0) {
-      mostrarMensaje("Por favor, selecciona una calificación con las estrellas", 'warning');
+      mostrarMensaje(translations[currentLang].selectStarRating, 'warning');
       return;
     }
 
     if (!publishConsent) {
-      mostrarMensaje("Debes autorizar la publicación de tu reseña para continuar", 'warning');
+      mostrarMensaje(translations[currentLang].authorizationRequired, 'warning');
       return;
     }
 
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(studentEmail)) {
-      mostrarMensaje("Por favor, ingresa un email válido", 'error');
+      mostrarMensaje(translations[currentLang].invalidEmail, 'error');
       return;
     }
 
     // Crear objeto de reseña
     const resena = {
-      nombre: anonymous ? 'Estudiante Anónimo' : studentName,
+      nombre: anonymous ? translations[currentLang].anonymousStudent : studentName,
       email: studentEmail,
       programa: program,
       semestre: semester,
@@ -314,7 +476,7 @@
     // Guardar reseña
     try {
       guardarResena(resena);
-      mostrarMensaje("¡Reseña enviada exitosamente! Serás redirigido para ver todas las reseñas en 3 segundos...", 'success');
+      mostrarMensaje(translations[currentLang].reviewSentSuccess, 'success');
       
       // Limpiar formulario después de 2 segundos
       setTimeout(() => {
@@ -322,7 +484,7 @@
         selectedRating = 0;
         hiddenRating.value = '';
         updateStars();
-        ratingText.textContent = 'Selecciona una calificación';
+        ratingText.textContent = translations[currentLang].selectRating;
       }, 2000);
       
       // Redirigir a las reseñas después de 3 segundos
@@ -331,9 +493,27 @@
       }, 3000);
       
     } catch (error) {
-      mostrarMensaje("Hubo un error al enviar tu reseña. Por favor, intenta nuevamente.", 'error');
+      mostrarMensaje(translations[currentLang].reviewSentError, 'error');
     }
   });
+
+  /* ————————————————————————————  INICIALIZACIÓN  ———————————————————————————— */
+  document.addEventListener("DOMContentLoaded", () => {
+    applyTranslations();
+    
+    // Escuchar cambios de idioma
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'lang') {
+        currentLang = e.newValue || 'es';
+        applyTranslations();
+      }
+    });
+    
+    console.log("✅ Contacto inicializado con idioma:", currentLang);
+  });
+
+  // Aplicar traducciones inmediatamente
+  applyTranslations();
 </script>
 </body>
 </html>

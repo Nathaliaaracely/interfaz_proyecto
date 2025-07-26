@@ -265,12 +265,12 @@
   <div id="menu"></div>
 
   <div class="container">
-    <h1>Votación Estudiantil</h1>
-    <p style="text-align:center;">Selecciona la lista de tu preferencia</p>
+    <h1 data-i18n="votingTitle">Votación Estudiantil</h1>
+    <p style="text-align:center;" data-i18n="selectInstructions">Selecciona la lista de tu preferencia</p>
 
     <form id="voteForm">
       <div class="candidates" id="listaCandidatos"></div>
-      <button type="submit" class="submit-btn">Enviar Voto</button>
+      <button type="submit" class="submit-btn" data-i18n="submitVote">Enviar Voto</button>
     </form>
 
     <p id="resultMessage"></p>
@@ -279,6 +279,68 @@
   <script src="menu.js"></script>
 
   <script>
+/* ————————————————————————————  SISTEMA DE TRADUCCIONES  ———————————————————————————— */
+const translations = {
+  es: {
+    votingTitle: "Votación Estudiantil",
+    selectInstructions: "Selecciona la lista de tu preferencia",
+    submitVote: "Enviar Voto",
+    alreadyVoted: "Ya has votado por",
+    thankYou: "¡Gracias por participar!",
+    selectCandidate: "⚠️ Selecciona un candidato antes de enviar.",
+    hasVotedFor: "✔ Has votado por",
+    president: "Presidente:",
+    vicePresident: "Vicepresidente:",
+    secretary: "Secretario/a:",
+    treasurer: "Tesorero/a:",
+    proposalsOf: "🎯 Propuestas de"
+  },
+  en: {
+    votingTitle: "Student Election",
+    selectInstructions: "Select your preferred list",
+    submitVote: "Submit Vote",
+    alreadyVoted: "You have already voted for",
+    thankYou: "Thank you for participating!",
+    selectCandidate: "⚠️ Select a candidate before submitting.",
+    hasVotedFor: "✔ You have voted for",
+    president: "President:",
+    vicePresident: "Vice President:",
+    secretary: "Secretary:",
+    treasurer: "Treasurer:",
+    proposalsOf: "🎯 Proposals of"
+  },
+  id: {
+    votingTitle: "Pemilihan Siswa",
+    selectInstructions: "Pilih daftar yang Anda sukai",
+    submitVote: "Kirim Suara",
+    alreadyVoted: "Anda sudah memilih",
+    thankYou: "Terima kasih telah berpartisipasi!",
+    selectCandidate: "⚠️ Pilih kandidat sebelum mengirim.",
+    hasVotedFor: "✔ Anda telah memilih",
+    president: "Presiden:",
+    vicePresident: "Wakil Presiden:",
+    secretary: "Sekretaris:",
+    treasurer: "Bendahara:",
+    proposalsOf: "🎯 Proposal dari"
+  }
+};
+
+/* ————————————————————————————  IDIOMA ACTUAL  ———————————————————————————— */
+let currentLang = localStorage.getItem("lang") || "es";
+
+/* ————————————————————————————  APLICAR TRADUCCIÓN  ———————————————————————————— */
+function applyTranslations() {
+  console.log("🌐 Aplicando traducción en votación:", currentLang);
+  
+  // Traducir elementos con data-i18n
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[currentLang] && translations[currentLang][key]) {
+      el.textContent = translations[currentLang][key];
+    }
+  });
+}
+
     document.addEventListener("DOMContentLoaded", () => {
       console.log("🔄 Página cargada - Iniciando votación");
       
@@ -292,6 +354,10 @@
         .then(html => { 
           document.getElementById("menu").innerHTML = html; 
           console.log("✅ Menú cargado");
+          // Aplicar traducciones después de cargar el menú
+          setTimeout(() => {
+            applyTranslations();
+          }, 100);
         });
 
       // Listas completas de candidatos (basadas en candidatos.html)
@@ -394,7 +460,7 @@
       
       if (votosRealizados[usuarioActual]) {
         console.log("❌ Usuario ya votó");
-        resultMsg.innerHTML = `✅ Ya has votado por <strong>${votosRealizados[usuarioActual]}</strong>. <br>¡Gracias por participar!`;
+        resultMsg.innerHTML = `✅ ${translations[currentLang].alreadyVoted} <strong>${votosRealizados[usuarioActual]}</strong>. <br>${translations[currentLang].thankYou}`;
         resultMsg.style.color = "green";
         resultMsg.style.fontSize = "1.3rem";
         lista.style.display = "none";
@@ -430,10 +496,10 @@
           <h3>${nombre}</h3>
           <p class="slogan">"${slogan}"</p>
           <div class="list-members">
-            <div class="member"><strong>Presidente:</strong> ${presidente}</div>
-            <div class="member"><strong>Vicepresidente:</strong> ${vicepresidente}</div>
-            <div class="member"><strong>Secretario/a:</strong> ${secretario}</div>
-            <div class="member"><strong>Tesorero/a:</strong> ${tesorero}</div>
+            <div class="member"><strong>${translations[currentLang].president}</strong> ${presidente}</div>
+            <div class="member"><strong>${translations[currentLang].vicePresident}</strong> ${vicepresidente}</div>
+            <div class="member"><strong>${translations[currentLang].secretary}</strong> ${secretario}</div>
+            <div class="member"><strong>${translations[currentLang].treasurer}</strong> ${tesorero}</div>
           </div>
         `;
         
@@ -442,7 +508,7 @@
           const tooltip = document.createElement("div");
           tooltip.className = "tooltip";
           tooltip.innerHTML = `
-            <h4>🎯 Propuestas de ${nombre.replace(/Lista "|"/g, '').replace('Unión Estudiantil', 'Unión Estudiantil').replace('Innovación Estudiantil', 'Innovación Estudiantil').replace('Verde y Futuro', 'Verde y Futuro').replace('Cultura y Arte', 'Cultura y Arte')}</h4>
+            <h4>${translations[currentLang].proposalsOf} ${nombre.replace(/Lista "|"/g, '').replace('Unión Estudiantil', 'Unión Estudiantil').replace('Innovación Estudiantil', 'Innovación Estudiantil').replace('Verde y Futuro', 'Verde y Futuro').replace('Cultura y Arte', 'Cultura y Arte')}</h4>
             <ul>
               ${propuestas.map(prop => `<li>${prop}</li>`).join('')}
             </ul>
@@ -500,7 +566,7 @@
         const seleccionado = document.querySelector('input[name="candidate"]:checked');
 
         if (!seleccionado) {
-          resultMsg.textContent = "⚠️ Selecciona un candidato antes de enviar.";
+          resultMsg.textContent = translations[currentLang].selectCandidate;
           resultMsg.style.color = "red";
           return;
         }
@@ -517,7 +583,7 @@
         votos[voto] = (votos[voto] || 0) + 1;
         localStorage.setItem("votes", JSON.stringify(votos));
 
-        resultMsg.innerHTML = `✔ Has votado por <strong>${voto}</strong>. ¡Gracias por participar!`;
+        resultMsg.innerHTML = `${translations[currentLang].hasVotedFor} <strong>${voto}</strong>. ${translations[currentLang].thankYou}`;
         resultMsg.style.color = "green";
         resultMsg.style.fontSize = "1.3rem";
 
@@ -526,64 +592,21 @@
 
         setTimeout(() => window.location.href = "inicio2.html", 3000);
       });
+
+      /* ————————————————————————————  INICIALIZACIÓN  ———————————————————————————— */
+      applyTranslations();
+      
+      // Escuchar cambios de idioma
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'lang') {
+          currentLang = e.newValue || 'es';
+          applyTranslations();
+        }
+      });
+      
+      console.log("✅ Votación inicializada con idioma:", currentLang);
     });
   </script>
-  <script>
-/* ————————————————————————————  TRADUCCIONES  ———————————————————————————— */
-const t = {
-  es: {
-    titleVote   : "Votación Estudiantil",
-    msgSelect   : "Selecciona al candidato de tu preferencia",
-    btnSend     : "Enviar Voto",
-    alreadyVoted: "Ya emitiste tu voto por",
-    startSoon   : "La votación aún no ha comenzado.",
-    ended       : "La votación ha finalizado.",
-    mustChoose  : "Por favor, selecciona un candidato antes de enviar.",
-    thankYou    : "¡Gracias por participar!"
-  },
-  en: {
-    titleVote   : "Student Election",
-    msgSelect   : "Choose your preferred candidate",
-    btnSend     : "Submit Vote",
-    alreadyVoted: "You have already voted for",
-    startSoon   : "Voting has not started yet.",
-    ended       : "Voting has ended.",
-    mustChoose  : "Please choose a candidate before submitting.",
-    thankYou    : "Thank you for participating!"
-  }
-};
-
-/* ————————————————————————————  IDIOMA ACTUAL  ———————————————————————————— */
-const lang = localStorage.getItem("lang") || "es";
-
-/* ————————————————————————————  APLICAR TRADUCCIÓN  ————————————————————————————
-   Llama a i18n() después de inyectar tu HTML dinámico.
-   Para cada texto traducible pon: data-i18n="clave"
--------------------------------------------------------------------------*/
-function i18n() {
-  document.querySelectorAll("[data-i18n]").forEach(el=>{
-    const key = el.getAttribute("data-i18n");
-    if (t[lang] && t[lang][key]) el.textContent = t[lang][key];
-  });
-  /* Ajustar placeholder si lo necesitas: */
-  const input = document.getElementById("searchInput");
-  if (input && t[lang].placeholderSearch)
-      input.placeholder = t[lang].placeholderSearch;
-}
-
-/* ————————————————————————————  SELECTOR ———————————————————————————— */
-document.addEventListener("DOMContentLoaded",()=>{
-  const sel = document.getElementById("langSelect");
-  if (sel) {
-    sel.value = lang;
-    sel.addEventListener("change", e=>{
-      localStorage.setItem("lang", e.target.value);
-      location.reload();          // método rápido: recargar con nuevo idioma
-    });
-  }
-  i18n();
-});
-</script>
 
 </body>
 </html>

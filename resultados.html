@@ -37,17 +37,64 @@
   <div id="menu"></div>
 
   <!--  ⬇️  Mensaje mientras no se puedan mostrar resultados -->
-  <div id="mensajeEspera" class="msg" style="display:none;">
+  <div id="mensajeEspera" class="msg" style="display:none;" data-i18n="waitingMessage">
     Resultados disponibles una vez finalice la votación.
   </div>
 
   <!--  ⬇️  Contenedor de resultados -->
   <div class="container" id="contenedorResultados" style="display:none;">
-    <h1>Resultados de la Votación</h1>
+    <h1 data-i18n="resultsTitle">Resultados de la Votación</h1>
     <div id="listaResultados"></div>
   </div>
 
   <script>
+    /* ————————————————————————————  SISTEMA DE TRADUCCIONES  ———————————————————————————— */
+    const translations = {
+      es: {
+        resultsTitle: "Resultados de la Votación",
+        waitingMessage: "Resultados disponibles una vez finalice la votación.",
+        notConfigured: "⚠ La fecha de fin de votación no está configurada.",
+        list: "Lista",
+        president: "Presidente:",
+        votes: "votos",
+        totalVotes: "Total de votos emitidos:"
+      },
+      en: {
+        resultsTitle: "Voting Results",
+        waitingMessage: "Results available once voting ends.",
+        notConfigured: "⚠ Voting end date is not configured.",
+        list: "List",
+        president: "President:",
+        votes: "votes",
+        totalVotes: "Total votes cast:"
+      },
+      id: {
+        resultsTitle: "Hasil Pemungutan Suara",
+        waitingMessage: "Hasil tersedia setelah pemungutan suara berakhir.",
+        notConfigured: "⚠ Tanggal akhir pemungutan suara tidak dikonfigurasi.",
+        list: "Daftar",
+        president: "Presiden:",
+        votes: "suara",
+        totalVotes: "Total suara yang diberikan:"
+      }
+    };
+
+    /* ————————————————————————————  IDIOMA ACTUAL  ———————————————————————————— */
+    let currentLang = localStorage.getItem("lang") || "es";
+
+    /* ————————————————————————————  APLICAR TRADUCCIÓN  ———————————————————————————— */
+    function applyTranslations() {
+      console.log("🌐 Aplicando traducción en resultados:", currentLang);
+      
+      // Traducir elementos con data-i18n
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[currentLang] && translations[currentLang][key]) {
+          el.textContent = translations[currentLang][key];
+        }
+      });
+    }
+
     /* ——————————————————————————————————————————
        1) DETERMINAR ROL Y CARGAR MENÚ
     —————————————————————————————————————————— */
@@ -57,7 +104,13 @@
       const archivo = (rolUsuario === "admin") ? "admin-menu.html" : "menu.html";
       fetch(archivo)
         .then(res => res.text())
-        .then(html => { document.getElementById("menu").innerHTML = html; });
+        .then(html => { 
+          document.getElementById("menu").innerHTML = html;
+          // Aplicar traducciones después de cargar el menú
+          setTimeout(() => {
+            applyTranslations();
+          }, 100);
+        });
     }
     cargarMenu();
 
@@ -68,15 +121,14 @@
       const finISO = localStorage.getItem("voto_fin");
 
       if (!finISO) {
-        document.getElementById("mensajeEspera").textContent =
-          "⚠ La fecha de fin de votación no está configurada.";
+        document.getElementById("mensajeEspera").textContent = translations[currentLang].notConfigured;
         document.getElementById("mensajeEspera").style.display = "block";
         document.getElementById("contenedorResultados").style.display = "none";
         return;
       }
 
-      const ahora   = new Date();          // hora actual en la zona local
-      const finDate = new Date(finISO);    // fin de la votación en la misma zona
+      const ahora   = new Date();          
+      const finDate = new Date(finISO);    
 
       /*  ———  ADMIN: ve siempre  ——— */
       if (rolUsuario === "admin") {
@@ -103,7 +155,7 @@
     function renderResultados() {
       const votos = JSON.parse(localStorage.getItem("votes")) || {};
       
-      // Listas completas de candidatos (igual que en votacion.html)
+      // Listas completas de candidatos
       const listasCandidatos = [
         {
           numero: 1,
@@ -179,10 +231,10 @@
           <div class="result-item">
             <div class="label">
               <span>
-                <strong>Lista ${numeroLista}:</strong> ${nombre}
-                ${presidente ? `<br><small style="color: #666; font-weight: normal;">Presidente: ${presidente}</small>` : ''}
+                <strong>${translations[currentLang].list} ${numeroLista}:</strong> ${nombre}
+                ${presidente ? `<br><small style="color: #666; font-weight: normal;">${translations[currentLang].president} ${presidente}</small>` : ''}
               </span>
-              <span style="color: #007bff; font-size: 1.1em;">${num} votos</span>
+              <span style="color: #007bff; font-size: 1.1em;">${num} ${translations[currentLang].votes}</span>
             </div>
             <div class="progress-bar">
               <div class="progress" style="width:${pct}%">${pct}%</div>
@@ -194,13 +246,13 @@
       // Mostrar total de votos
       lista.insertAdjacentHTML("beforeend", `
         <div style="margin-top: 30px; text-align: center; font-size: 1.2em; color: #003366;">
-          <strong>Total de votos emitidos: ${total}</strong>
+          <strong>${translations[currentLang].totalVotes} ${total}</strong>
         </div>
       `);
     }
 
     /* ——————————————————————————————————————————
-       4) INICIAR Y ACTUALIZAR CADA 30 s
+       4) INICIAR Y ACTUALIZAR CADA 30 s
     —————————————————————————————————————————— */
     actualizarVista();
     setInterval(actualizarVista, 30000);
