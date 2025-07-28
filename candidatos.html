@@ -447,8 +447,11 @@
       });
     }
 
-    // Cargar menú dinámico
-    fetch("menu.html")
+    // Cargar menú dinámico basado en el rol del usuario
+    const rolUsuario = localStorage.getItem("rolUsuario") || "usuario";
+    const archivoMenu = (rolUsuario === "admin") ? "admin-menu.html" : "menu.html";
+    
+    fetch(archivoMenu)
       .then(res => res.text())
       .then(data => {
         document.getElementById("menu").innerHTML = data;
@@ -456,6 +459,18 @@
         setTimeout(() => {
           applyTranslations();
         }, 100);
+      })
+      .catch(error => {
+        console.error("Error cargando menú:", error);
+        // Fallback al menú normal si hay error
+        fetch("menu.html")
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("menu").innerHTML = data;
+            setTimeout(() => {
+              applyTranslations();
+            }, 100);
+          });
       });
 
     /* ————————————————————————————  INICIALIZACIÓN  ———————————————————————————— */

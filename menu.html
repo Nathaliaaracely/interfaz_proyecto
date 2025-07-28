@@ -120,13 +120,30 @@ function applyTranslations() {
 }
 
 /* ————————————————————————————  MENÚ RESPONSIVE  ———————————————————————————— */
-document.getElementById("toggleMenuBtn").addEventListener("click", () => {
-  document.getElementById("navLinks").classList.toggle("active");
-});
+function initMenuToggle() {
+  const toggleBtn = document.getElementById("toggleMenuBtn");
+  const navLinks = document.getElementById("navLinks");
+  
+  if (toggleBtn && navLinks) {
+    toggleBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+    });
+    console.log("✅ Menú responsive conectado");
+  }
+}
 
 /* ————————————————————————————  SISTEMA DE BÚSQUEDA MEJORADO  ———————————————————————————— */
 function performSearch() {
-  const query = document.getElementById("searchInput").value.toLowerCase().trim();
+  const searchInput = document.getElementById("searchInput");
+  
+  if (!searchInput) {
+    console.error("❌ No se encontró el campo de búsqueda");
+    alert("Error: Campo de búsqueda no encontrado");
+    return;
+  }
+  
+  const query = searchInput.value.toLowerCase().trim();
+  console.log("🔍 Valor de búsqueda:", query);
   
   if (!query) {
     alert(translations[currentLang].searchEmpty);
@@ -138,43 +155,47 @@ function performSearch() {
   // Términos de búsqueda multiidioma
   const searchTerms = {
     candidates: {
-      es: ["candidato", "candidatos", "presidente", "vicepresidente", "lista", "listas"],
-      en: ["candidate", "candidates", "president", "vice president", "list", "lists"],
-      id: ["kandidat", "presiden", "wakil presiden", "daftar"]
+      es: ["candidato", "candidatos", "presidente", "vicepresidente", "lista", "listas", "ana", "luis", "camila", "roberto"],
+      en: ["candidate", "candidates", "president", "vice president", "list", "lists", "ana", "luis", "camila", "roberto"],
+      id: ["kandidat", "presiden", "wakil presiden", "daftar", "ana", "luis", "camila", "roberto"]
     },
     vote: {
-      es: ["votar", "votación", "voto", "votos", "elegir", "elección"],
-      en: ["vote", "voting", "election", "choose", "ballot"],
-      id: ["pilih", "pemilihan", "suara", "memilih"]
+      es: ["votar", "votación", "voto", "votos", "elegir", "elección", "sufragio"],
+      en: ["vote", "voting", "election", "choose", "ballot", "poll"],
+      id: ["pilih", "pemilihan", "suara", "memilih", "voting"]
     },
     results: {
-      es: ["resultado", "resultados", "ganador", "conteo"],
-      en: ["result", "results", "winner", "count"],
-      id: ["hasil", "pemenang", "perhitungan"]
+      es: ["resultado", "resultados", "ganador", "conteo", "estadística", "estadisticas"],
+      en: ["result", "results", "winner", "count", "statistics", "stats"],
+      id: ["hasil", "pemenang", "perhitungan", "statistik"]
     },
     home: {
-      es: ["inicio", "principal", "casa", "hogar"],
-      en: ["home", "main", "start", "beginning"],
-      id: ["beranda", "utama", "awal"]
+      es: ["inicio", "principal", "casa", "hogar", "bienvenida", "bienvenido"],
+      en: ["home", "main", "start", "beginning", "welcome"],
+      id: ["beranda", "utama", "awal", "selamat datang"]
     },
     reviews: {
-      es: ["reseña", "reseñas", "opinión", "opiniones", "experiencia", "comentario"],
-      en: ["review", "reviews", "opinion", "opinions", "experience", "comment"],
-      id: ["ulasan", "pendapat", "pengalaman", "komentar"]
+      es: ["reseña", "reseñas", "opinión", "opiniones", "experiencia", "comentario", "valoración"],
+      en: ["review", "reviews", "opinion", "opinions", "experience", "comment", "rating"],
+      id: ["ulasan", "pendapat", "pengalaman", "komentar", "penilaian"]
     },
     contact: {
-      es: ["contacto", "contactar", "mensaje", "comunicar"],
-      en: ["contact", "message", "communicate", "reach"],
-      id: ["kontak", "pesan", "berkomunikasi"]
+      es: ["contacto", "contactar", "mensaje", "comunicar", "ayuda", "soporte"],
+      en: ["contact", "message", "communicate", "reach", "help", "support"],
+      id: ["kontak", "pesan", "berkomunikasi", "bantuan", "dukungan"]
     }
   };
   
   // Buscar coincidencias
   let destination = null;
+  let matchedTerm = "";
   
   for (const [page, terms] of Object.entries(searchTerms)) {
     const allTerms = Object.values(terms).flat();
-    if (allTerms.some(term => query.includes(term))) {
+    const matchedTermFound = allTerms.find(term => query.includes(term));
+    
+    if (matchedTermFound) {
+      matchedTerm = matchedTermFound;
       switch (page) {
         case 'candidates': destination = 'candidatos.html'; break;
         case 'vote': destination = 'votacion.html'; break;
@@ -187,63 +208,116 @@ function performSearch() {
     }
   }
   
+  console.log("🎯 Término encontrado:", matchedTerm);
+  console.log("📍 Destino:", destination);
+  
   if (destination) {
     console.log("✅ Redirigiendo a:", destination);
-    window.location.href = destination;
+    // Mostrar mensaje antes de redirigir
+    searchInput.value = "";  // Limpiar campo
+    alert(`Redirigiendo a: ${matchedTerm} → ${destination}`);
+    setTimeout(() => {
+      window.location.href = destination;
+    }, 1000);
   } else {
     alert(`${translations[currentLang].searchNoResults} "${query}"`);
+    console.log("❌ No se encontraron coincidencias para:", query);
   }
 }
 
-// Eventos de búsqueda
-document.getElementById("btnBuscar").addEventListener("click", e => {
-  e.preventDefault();
-  performSearch();
-});
-
-document.getElementById("searchInput").addEventListener("keypress", e => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    performSearch();
+// Eventos de búsqueda - Con verificación de elementos
+function initSearchEvents() {
+  const btnBuscar = document.getElementById("btnBuscar");
+  const searchInput = document.getElementById("searchInput");
+  
+  if (btnBuscar) {
+    btnBuscar.addEventListener("click", e => {
+      e.preventDefault();
+      performSearch();
+    });
+    console.log("✅ Botón de búsqueda conectado");
   }
-});
+
+  if (searchInput) {
+    searchInput.addEventListener("keypress", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        performSearch();
+      }
+    });
+    console.log("✅ Campo de búsqueda conectado");
+  }
+}
 
 /* ————————————————————————————  SELECTOR DE IDIOMA  ———————————————————————————— */
-document.getElementById("langSelect").addEventListener("change", e => {
-  const newLang = e.target.value;
-  console.log("🔄 Cambiando idioma a:", newLang);
+function initLanguageSelector() {
+  const langSelect = document.getElementById("langSelect");
   
-  localStorage.setItem("lang", newLang);
-  currentLang = newLang;
-  
-  // Aplicar traducción inmediatamente
-  applyTranslations();
-  
-  // Opcional: recargar la página para aplicar todas las traducciones
-  setTimeout(() => {
-    location.reload();
-  }, 500);
-});
+  if (langSelect) {
+    langSelect.addEventListener("change", e => {
+      const newLang = e.target.value;
+      console.log("🔄 Cambiando idioma a:", newLang);
+      
+      localStorage.setItem("lang", newLang);
+      currentLang = newLang;
+      
+      // Aplicar traducción inmediatamente
+      applyTranslations();
+      
+      // Opcional: recargar la página para aplicar todas las traducciones
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    });
+    console.log("✅ Selector de idioma conectado");
+  }
+}
 
 /* ————————————————————————————  CERRAR SESIÓN  ———————————————————————————— */
-document.getElementById("cerrarSesionUsuario").addEventListener("click", e => {
-  e.preventDefault();
-  localStorage.removeItem("rolUsuario");
-  localStorage.removeItem("usuarioActual");
-  window.location.href = "inicio.html";
-});
+function initLogout() {
+  const logoutBtn = document.getElementById("cerrarSesionUsuario");
+  
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", e => {
+      e.preventDefault();
+      localStorage.removeItem("rolUsuario");
+      localStorage.removeItem("usuarioActual");
+      window.location.href = "inicio.html";
+    });
+    console.log("✅ Botón cerrar sesión conectado");
+  }
+}
 
 /* ————————————————————————————  INICIALIZACIÓN  ———————————————————————————— */
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 Inicializando menú...");
+  
   // Establecer idioma en el selector
-  document.getElementById("langSelect").value = currentLang;
+  const langSelect = document.getElementById("langSelect");
+  if (langSelect) {
+    langSelect.value = currentLang;
+  }
   
   // Aplicar traducciones
   applyTranslations();
+  
+  // Inicializar todos los eventos
+  initMenuToggle();
+  initSearchEvents();
+  initLanguageSelector();
+  initLogout();
   
   console.log("✅ Menú inicializado con idioma:", currentLang);
 });
 
 // Aplicar traducciones inmediatamente
 applyTranslations();
+
+// También inicializar eventos inmediatamente por si el DOM ya está listo
+setTimeout(() => {
+  initMenuToggle();
+  initSearchEvents();
+  initLanguageSelector(); 
+  initLogout();
+}, 100);
 </script>
