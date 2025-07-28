@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="loginTitle">Iniciar Sesión - VotoUni</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Selector de idioma en el login -->
+  <div class="language-selector">
+    <select id="langSelect" class="lang-select-login">
+      <option value="es">🇪🇸 Español</option>
+      <option value="en">🇺🇸 English</option>
+      <option value="id">🇮🇩 Indonesia</option>
+    </select>
+  </div>
+
+  <div class="wrapper">
+    <form id="loginForm">
+      <h1 data-i18n="loginHeader">Iniciar Sesión</h1>
+
+      <div id="errorMessage"></div>
+
+      <div class="input-box">
+        <input type="text" id="username" data-i18n-placeholder="usernamePlaceholder" placeholder="Nombre de usuario" required />
+        <i class='bx bxs-user'></i>
+      </div>
+
+      <div class="input-box">
+        <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" placeholder="Contraseña" required />
+        <i class='bx bx-show' id="togglePassword" data-i18n-title="togglePasswordTitle" title="Mostrar/Ocultar contraseña"></i>
+        <i class='bx bxs-lock'></i>
+      </div>
+
+      <div class="remember-forgot">
+        <label><input type="checkbox" /> <span data-i18n="rememberMe">Recordarme</span></label>
+        <a href="#" data-i18n="forgotPassword">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn" data-i18n="loginButton">Iniciar Sesión</button>
+
+      <div class="register-link">
+        <p><span data-i18n="noAccount">¿No tienes una cuenta?</span> <a href="pages/auth/registro.html" data-i18n="registerLink">Regístrate</a></p>
+      </div>
+    </form>
+  </div>
+
+<script>
+/* ————————————————————————————  SISTEMA DE TRADUCCIONES  ———————————————————————————— */
+const translations = {
+  es: {
+    loginTitle: "Iniciar Sesión - VotoUni",
+    loginHeader: "Iniciar Sesión",
+    usernamePlaceholder: "Nombre de usuario",
+    passwordPlaceholder: "Contraseña",
+    togglePasswordTitle: "Mostrar/Ocultar contraseña",
+    rememberMe: "Recordarme",
+    forgotPassword: "¿Olvidaste tu contraseña?",
+    loginButton: "Iniciar Sesión",
+    noAccount: "¿No tienes una cuenta?",
+    registerLink: "Regístrate",
+    
+    // Mensajes de error
+    completeFields: "Por favor, completa todos los campos",
+    blockedAccess: "Demasiados intentos fallidos. Intenta de nuevo en",
+    seconds: "segundos",
+    wrongCredentials: "Usuario o contraseña incorrecta. Intentos",
+    maxAttempts: "Has excedido el número máximo de intentos. Acceso bloqueado por 2 minutos",
+    attempts: "intentos fallidos. Ten cuidado"
+  },
+  en: {
+    loginTitle: "Login - VotoUni", 
+    loginHeader: "Login",
+    usernamePlaceholder: "Username",
+    passwordPlaceholder: "Password",
+    togglePasswordTitle: "Show/Hide password",
+    rememberMe: "Remember me",
+    forgotPassword: "Forgot Password?",
+    loginButton: "Login",
+    noAccount: "Don't have an account?",
+    registerLink: "Register",
+    
+    // Error messages
+    completeFields: "Please complete all fields",
+    blockedAccess: "Too many failed attempts. Try again in",
+    seconds: "seconds",
+    wrongCredentials: "Incorrect username or password. Attempts",
+    maxAttempts: "You have exceeded the maximum number of attempts. Access blocked for 2 minutes",
+    attempts: "failed attempts. Be careful"
+  },
+  id: {
+    loginTitle: "Masuk - VotoUni",
+    loginHeader: "Masuk", 
+    usernamePlaceholder: "Nama pengguna",
+    passwordPlaceholder: "Kata sandi",
+    togglePasswordTitle: "Tampilkan/Sembunyikan kata sandi",
+    rememberMe: "Ingat saya",
+    forgotPassword: "Lupa kata sandi?",
+    loginButton: "Masuk",
+    noAccount: "Belum punya akun?",
+    registerLink: "Daftar",
+    
+    // Pesan error
+    completeFields: "Harap lengkapi semua kolom",
+    blockedAccess: "Terlalu banyak percobaan gagal. Coba lagi dalam",
+    seconds: "detik",
+    wrongCredentials: "Nama pengguna atau kata sandi salah. Percobaan",
+    maxAttempts: "Anda telah melebihi jumlah maksimum percobaan. Akses diblokir selama 2 menit",
+    attempts: "percobaan gagal. Hati-hati"
+  }
+};
+
+/* ————————————————————————————  IDIOMA ACTUAL  ———————————————————————————— */
+let currentLang = localStorage.getItem("lang") || "es";
+
+/* ————————————————————————————  APLICAR TRADUCCIÓN  ———————————————————————————— */
+function applyTranslations() {
+  // Traducir elementos con data-i18n
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[currentLang] && translations[currentLang][key]) {
+      el.textContent = translations[currentLang][key];
+    }
+  });
+  
+  // Traducir placeholders
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (translations[currentLang] && translations[currentLang][key]) {
+      el.placeholder = translations[currentLang][key];
+    }
+  });
+  
+  // Traducir títulos
+  document.querySelectorAll("[data-i18n-title]").forEach(el => {
+    const key = el.getAttribute("data-i18n-title");
+    if (translations[currentLang] && translations[currentLang][key]) {
+      el.title = translations[currentLang][key];
+    }
+  });
+  
+  // Actualizar título de la página
+  document.title = translations[currentLang].loginTitle;
+}
+
+/* ————————————————————————————  SELECTOR DE IDIOMA  ———————————————————————————— */
+document.getElementById("langSelect").addEventListener("change", e => {
+  const newLang = e.target.value;
+  localStorage.setItem("lang", newLang);
+  currentLang = newLang;
+  applyTranslations();
+});
+
+/* ————————————————————————————  RESTO DEL CÓDIGO ORIGINAL  ———————————————————————————— */
+  // Función para obtener usuarios registrados del localStorage
+  function obtenerUsuarios() {
+    const usuarios = localStorage.getItem('usuariosRegistrados');
+    if (usuarios) {
+      return JSON.parse(usuarios);
+    } else {
+      // Usuarios por defecto si no hay registros
+      const usuariosPorDefecto = {
+        admin: { password: "1234", role: "admin", fullName: "Administrador", email: "admin@admin.com" },
+        usua1: { password: "4321", role: "user", fullName: "Usuario 1", email: "user1@test.com" }
+      };
+      localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosPorDefecto));
+      return usuariosPorDefecto;
+    }
+  }
+
+  // Variables para controlar intentos
+  let intentosFallidos = parseInt(localStorage.getItem('intentosFallidos')) || 0;
+  let tiempoBloqueado = parseInt(localStorage.getItem('tiempoBloqueado')) || 0;
+
+  // Mostrar/Ocultar contraseña
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordField = document.getElementById('password');
+
+  togglePassword.addEventListener('click', function () {
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      togglePassword.classList.remove('bx-show');
+      togglePassword.classList.add('bx-hide');
+    } else {
+      passwordField.type = 'password';
+      togglePassword.classList.remove('bx-hide');
+      togglePassword.classList.add('bx-show');
+    }
+  });
+
+  // Mostrar errores visuales con traducción
+  function mostrarError(mensajeKey, tipo = 'error', params = {}) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.style.display = 'block';
+    
+    let mensaje = translations[currentLang][mensajeKey] || mensajeKey;
+    
+    // Reemplazar parámetros en el mensaje
+    Object.keys(params).forEach(key => {
+      mensaje = mensaje.replace(`{${key}}`, params[key]);
+    });
+    
+    errorDiv.textContent = mensaje;
+
+    if (tipo === 'warning') {
+      errorDiv.style.backgroundColor = '#fff3cd';
+      errorDiv.style.borderColor = '#ffeeba';
+      errorDiv.style.color = '#856404';
+    } else {
+      errorDiv.style.backgroundColor = '#f8d7da';
+      errorDiv.style.borderColor = '#f5c6cb';
+      errorDiv.style.color = '#721c24';
+    }
+
+    setTimeout(() => {
+      errorDiv.style.display = 'none';
+    }, 5000);
+  }
+
+  // Manejo de login con traducción
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const ahora = Date.now();
+    if (tiempoBloqueado && ahora < tiempoBloqueado) {
+      const tiempoRestante = Math.ceil((tiempoBloqueado - ahora) / 1000);
+      mostrarError(`🔒 ${translations[currentLang].blockedAccess} ${tiempoRestante} ${translations[currentLang].seconds}.`);
+      return;
+    }
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+      mostrarError("completeFields", 'warning');
+      return;
+    }
+
+    // Obtener usuarios registrados
+    const users = obtenerUsuarios();
+
+    if (users[username] && users[username].password === password) {
+      // Éxito
+      intentosFallidos = 0;
+      tiempoBloqueado = 0;
+      localStorage.removeItem('intentosFallidos');
+      localStorage.removeItem('tiempoBloqueado');
+
+      localStorage.setItem("rolUsuario", users[username].role);
+      localStorage.setItem("usuarioActual", username);
+
+      if (users[username].role === "admin") {
+        window.location.href = "pages/admin/admin.html";
+      } else {
+        window.location.href = "pages/user/inicio2.html";
+      }
+
+    } else {
+      intentosFallidos++;
+      localStorage.setItem('intentosFallidos', intentosFallidos);
+
+      if (intentosFallidos >= 5) {
+        tiempoBloqueado = Date.now() + (2 * 60 * 1000);
+        localStorage.setItem('tiempoBloqueado', tiempoBloqueado);
+        mostrarError(`‼️ ${translations[currentLang].maxAttempts}.`);
+      } else if (intentosFallidos >= 3) {
+        mostrarError(`⚠️ ${intentosFallidos}/5 ${translations[currentLang].attempts}.`, 'warning');
+      } else {
+        mostrarError(`❌ ${translations[currentLang].wrongCredentials} ${intentosFallidos}/5`);
+      }
+    }
+  });
+
+  /* ————————————————————————————  INICIALIZACIÓN  ———————————————————————————— */
+  document.addEventListener("DOMContentLoaded", () => {
+    // Establecer idioma en el selector
+    document.getElementById("langSelect").value = currentLang;
+    
+    // Aplicar traducciones
+    applyTranslations();
+    
+    console.log("✅ Login inicializado con idioma:", currentLang);
+  });
+
+  // Aplicar traducciones inmediatamente
+  applyTranslations();
+</script>
+</body>
+</html>
