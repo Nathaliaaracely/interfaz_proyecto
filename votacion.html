@@ -344,9 +344,7 @@ function applyTranslations() {
     document.addEventListener("DOMContentLoaded", () => {
       console.log("🔄 Página cargada - Iniciando votación");
       
-      // LIMPIAR DATOS CORRUPTOS DEL LOCALSTORAGE
-      console.log("🧹 Limpiando localStorage de candidatos...");
-      localStorage.removeItem("candidates");
+      // Inicializar datos por defecto si no existen
       
       // Cargar menú
       fetch("menu.html")
@@ -360,8 +358,8 @@ function applyTranslations() {
           }, 100);
         });
 
-      // Listas completas de candidatos (basadas en candidatos.html)
-      const listasCandidatos = [
+      // Candidatos por defecto que siempre deben existir
+      const defaultCandidates = [
         {
           numero: 1,
           nombre: "Lista \"Unión Estudiantil\"",
@@ -428,12 +426,17 @@ function applyTranslations() {
         }
       ];
 
-      // USAR SIEMPRE LAS LISTAS PREDEFINIDAS PARA EVITAR ERRORES
+      // Inicializar localStorage con candidatos por defecto si no existe
+      if (!localStorage.getItem('candidates')) {
+        localStorage.setItem('candidates', JSON.stringify(defaultCandidates));
+      }
+
+      // Obtener listas de candidatos desde localStorage (que ya incluye los por defecto)
+      const listasCandidatos = JSON.parse(localStorage.getItem('candidates'));
+      
+      // Usar la variable correcta
       let candidatos = listasCandidatos;
-      
-      // También guardar en localStorage para consistencia
-      localStorage.setItem("candidates", JSON.stringify(candidatos));
-      
+
       console.log("📋 Candidatos cargados:", candidatos.length, "listas");
       console.log("🔍 Verificando datos de cada lista:");
       candidatos.forEach((lista, i) => {
@@ -458,10 +461,58 @@ function applyTranslations() {
       console.log("👤 Usuario actual:", usuarioActual);
       console.log("🗳️ Votos realizados:", votosRealizados);
       
+      // VERIFICAR ESTADO DE LA VOTACIÓN POR FECHAS
+      function verificarEstadoVotacion() {
+        const fechaInicio = localStorage.getItem("fechaInicioVotacion");
+        const fechaFin = localStorage.getItem("fechaFinVotacion");
+        const ahora = new Date().getTime();
+        
+        console.log("📅 Verificando fechas de votación:", {
+          inicio: fechaInicio ? new Date(parseInt(fechaInicio)) : "No configurada",
+          fin: fechaFin ? new Date(parseInt(fechaFin)) : "No configurada",
+          ahora: new Date(ahora)
+        });
+        
+        if (!fechaInicio || !fechaFin) {
+          return { estado: "no_configurada", mensaje: "Las fechas de votación no han sido configuradas por el administrador." };
+        }
+        
+        const inicioTime = parseInt(fechaInicio);
+        const finTime = parseInt(fechaFin);
+        
+        if (ahora < inicioTime) {
+          const inicioDate = new Date(inicioTime);
+          return { 
+            estado: "no_iniciada", 
+            mensaje: `La votación comenzará el ${inicioDate.toLocaleDateString()} a las ${inicioDate.toLocaleTimeString()}.` 
+          };
+        }
+        
+        if (ahora > finTime) {
+          return { estado: "finalizada", mensaje: "La votación ha finalizado. Los resultados están disponibles." };
+        }
+        
+        return { estado: "activa", mensaje: "Votación activa" };
+      }
+      
+      const estadoVotacion = verificarEstadoVotacion();
+      console.log("🗳️ Estado de votación:", estadoVotacion);
+      
       if (votosRealizados[usuarioActual]) {
         console.log("❌ Usuario ya votó");
         resultMsg.innerHTML = `✅ ${translations[currentLang].alreadyVoted} <strong>${votosRealizados[usuarioActual]}</strong>. <br>${translations[currentLang].thankYou}`;
         resultMsg.style.color = "green";
+        resultMsg.style.fontSize = "1.3rem";
+        lista.style.display = "none";
+        submitBtn.style.display = "none";
+        return;
+      }
+      
+      // MOSTRAR MENSAJE SEGÚN EL ESTADO DE LA VOTACIÓN
+      if (estadoVotacion.estado !== "activa") {
+        console.log("⏰ Votación no activa:", estadoVotacion.estado);
+        resultMsg.innerHTML = `📅 ${estadoVotacion.mensaje}`;
+        resultMsg.style.color = estadoVotacion.estado === "finalizada" ? "green" : "orange";
         resultMsg.style.fontSize = "1.3rem";
         lista.style.display = "none";
         submitBtn.style.display = "none";

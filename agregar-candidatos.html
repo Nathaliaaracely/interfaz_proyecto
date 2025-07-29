@@ -278,6 +278,22 @@
         document.getElementById("menu").innerHTML = data;
       });
 
+    // Función para sugerir el siguiente número disponible
+    function suggestNextNumber() {
+      const candidates = loadCandidates();
+      if (candidates.length === 0) {
+        document.getElementById('numero').value = 1;
+        return;
+      }
+      
+      // Encontrar el número más alto y sugerir el siguiente
+      const maxNumber = Math.max(...candidates.map(c => c.numero));
+      document.getElementById('numero').value = maxNumber + 1;
+    }
+
+    // Sugerir número al cargar la página
+    suggestNextNumber();
+
     const addCandidateForm = document.getElementById('addCandidateForm');
 
     // Obtener candidatos existentes para validar números únicos

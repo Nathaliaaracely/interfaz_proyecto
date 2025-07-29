@@ -67,8 +67,8 @@
 
     // Función para mostrar el estado actual
     function mostrarEstadoActual() {
-      const storedStart = localStorage.getItem("voto_inicio");
-      const storedEnd = localStorage.getItem("voto_fin");
+      const storedStart = localStorage.getItem("fechaInicioVotacion");
+      const storedEnd = localStorage.getItem("fechaFinVotacion");
       const infoDiv = document.getElementById("infoFechas");
       
       if (!storedStart || !storedEnd) {
@@ -76,8 +76,8 @@
         return;
       }
       
-      const inicio = new Date(storedStart);
-      const fin = new Date(storedEnd);
+      const inicio = new Date(parseInt(storedStart));
+      const fin = new Date(parseInt(storedEnd));
       const ahora = new Date();
       
       let estado = "";
@@ -102,10 +102,16 @@
     }
 
     // Cargar fechas guardadas en localStorage si existen y mostrar estado
-    const storedStart = localStorage.getItem("voto_inicio");
-    const storedEnd = localStorage.getItem("voto_fin");
-    if (storedStart) document.getElementById("inicio").value = storedStart;
-    if (storedEnd) document.getElementById("fin").value = storedEnd;
+    const storedStart = localStorage.getItem("fechaInicioVotacion");
+    const storedEnd = localStorage.getItem("fechaFinVotacion");
+    if (storedStart) {
+      const startDate = new Date(parseInt(storedStart));
+      document.getElementById("inicio").value = startDate.toISOString().slice(0, 16);
+    }
+    if (storedEnd) {
+      const endDate = new Date(parseInt(storedEnd));
+      document.getElementById("fin").value = endDate.toISOString().slice(0, 16);
+    }
     mostrarEstadoActual();
 
     // Configuración rápida: Activar ahora por 1 hora
@@ -119,9 +125,9 @@
       document.getElementById("inicio").value = inicioStr;
       document.getElementById("fin").value = finStr;
       
-      // Guardar automáticamente
-      localStorage.setItem("voto_inicio", inicioStr);
-      localStorage.setItem("voto_fin", finStr);
+      // Guardar en timestamp para compatibilidad
+      localStorage.setItem("fechaInicioVotacion", ahora.getTime().toString());
+      localStorage.setItem("fechaFinVotacion", fin.getTime().toString());
       
       mostrarEstadoActual();
       
@@ -165,9 +171,12 @@
         return;
       }
 
-      // Guardar fechas
-      localStorage.setItem("voto_inicio", inicio);
-      localStorage.setItem("voto_fin", fin);
+      // Convertir a timestamps y guardar
+      const inicioTime = new Date(inicio).getTime();
+      const finTime = new Date(fin).getTime();
+      
+      localStorage.setItem("fechaInicioVotacion", inicioTime.toString());
+      localStorage.setItem("fechaFinVotacion", finTime.toString());
       
       mostrarEstadoActual();
       
@@ -183,9 +192,9 @@
       
       // Debug en consola
       console.log("=== FECHAS CONFIGURADAS ===");
-      console.log("Inicio guardado:", inicio);
-      console.log("Fin guardado:", fin);
-      console.log("Inicio parseado:", new Date(inicio));
+      console.log("Inicio guardado:", inicioTime);
+      console.log("Fin guardado:", finTime);
+      console.log("Inicio parseado:", new Date(inicioTime));
       console.log("Fin parseado:", new Date(fin));
     });
   </script>

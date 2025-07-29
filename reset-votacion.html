@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reset Sistema de Votación</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+    .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+    button { background: #007bff; color: white; border: none; padding: 15px 30px; border-radius: 5px; 
+             font-size: 1.1rem; cursor: pointer; margin: 10px; }
+    button:hover { background: #0056b3; }
+    .danger { background: #dc3545; }
+    .danger:hover { background: #c82333; }
+    .success { background: #28a745; }
+    .success:hover { background: #218838; }
+    .info { background: #e9ecef; color: #495057; padding: 15px; border-radius: 5px; margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Panel de Control - Sistema de Votación</h1>
+    
+    <div class="info">
+      <strong>Estado Actual:</strong>
+      <div id="estado">Verificando...</div>
+    </div>
+    
+    <h3>Acciones Disponibles:</h3>
+    
+    <button onclick="limpiarTodo()" class="danger">
+      🗑️ Limpiar TODO (Candidatos + Fechas + Votos)
+    </button>
+    
+    <button onclick="limpiarSoloFechas()">
+      📅 Limpiar Solo Fechas de Votación
+    </button>
+    
+    <button onclick="activarVotacionPrueba()" class="success">
+      🚀 Activar Votación de Prueba (1 hora)
+    </button>
+    
+    <button onclick="mostrarEstado()">
+      📊 Actualizar Estado
+    </button>
+    
+    <div style="margin-top: 30px;">
+      <a href="admin.html" style="text-decoration: none;">
+        <button>👨‍💼 Ir al Panel Admin</button>
+      </a>
+      
+      <a href="votacion.html" style="text-decoration: none;">
+        <button>🗳️ Ir a Votación</button>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function mostrarEstado() {
+      const fechaInicio = localStorage.getItem("fechaInicioVotacion");
+      const fechaFin = localStorage.getItem("fechaFinVotacion");
+      const candidates = localStorage.getItem("candidates");
+      const votos = localStorage.getItem("votes");
+      
+      let estado = "";
+      
+      if (!fechaInicio || !fechaFin) {
+        estado += "❌ Sin fechas configuradas<br>";
+      } else {
+        const ahora = new Date().getTime();
+        const inicio = parseInt(fechaInicio);
+        const fin = parseInt(fechaFin);
+        
+        if (ahora < inicio) {
+          estado += `⏳ Votación programada para: ${new Date(inicio).toLocaleString()}<br>`;
+        } else if (ahora > fin) {
+          estado += `🛑 Votación finalizada: ${new Date(fin).toLocaleString()}<br>`;
+        } else {
+          estado += `✅ Votación ACTIVA hasta: ${new Date(fin).toLocaleString()}<br>`;
+        }
+      }
+      
+      const candidatesCount = candidates ? JSON.parse(candidates).length : 0;
+      estado += `👥 Candidatos: ${candidatesCount}<br>`;
+      
+      const votosCount = votos ? Object.keys(JSON.parse(votos)).length : 0;
+      estado += `🗳️ Votos registrados: ${votosCount}`;
+      
+      document.getElementById("estado").innerHTML = estado;
+    }
+    
+    function limpiarTodo() {
+      if (confirm("¿Estás seguro? Esto borrará TODOS los datos (candidatos, fechas, votos)")) {
+        localStorage.removeItem("fechaInicioVotacion");
+        localStorage.removeItem("fechaFinVotacion");
+        localStorage.removeItem("candidates");
+        localStorage.removeItem("votes");
+        localStorage.removeItem("votosRealizados");
+        alert("✅ Todo limpio! El sistema se reiniciará con datos por defecto.");
+        mostrarEstado();
+      }
+    }
+    
+    function limpiarSoloFechas() {
+      localStorage.removeItem("fechaInicioVotacion");
+      localStorage.removeItem("fechaFinVotacion");
+      alert("✅ Fechas de votación eliminadas.");
+      mostrarEstado();
+    }
+    
+    function activarVotacionPrueba() {
+      const ahora = new Date();
+      const fin = new Date(ahora.getTime() + 60 * 60 * 1000); // 1 hora
+      
+      localStorage.setItem("fechaInicioVotacion", ahora.getTime().toString());
+      localStorage.setItem("fechaFinVotacion", fin.getTime().toString());
+      
+      alert(`🚀 Votación activada desde AHORA hasta ${fin.toLocaleTimeString()}`);
+      mostrarEstado();
+    }
+    
+    // Mostrar estado al cargar
+    mostrarEstado();
+  </script>
+</body>
+</html>
