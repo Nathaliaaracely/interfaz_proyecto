@@ -20,9 +20,24 @@
            font-weight:bold;color:#003366}
     .progress-bar{width:100%;height:30px;background:#e5e7eb;border-radius:8px;
                   overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.1)}
-    .progress{height:100%;background:linear-gradient(90deg, #007bff, #0056b3);width:0;text-align:right;color:#fff;
-              padding-right:15px;line-height:30px;font-weight:bold;font-size:0.9em;
-              transition:width 1.5s ease-in-out;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+    .progress{
+      height:100%;
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      width: 0;
+      text-align:right;
+      color:#fff;
+      padding-right:15px;
+      line-height:30px;
+      font-weight:bold;
+      font-size:0.9em;
+      transition:width 1.5s ease-in-out;
+      box-shadow:0 2px 4px rgba(0,0,0,0.2);
+
+      /* Asegura visibilidad cuando la barra es muy pequeña */
+      min-width: 5px;
+      border-radius: 0 8px 8px 0;
+      box-sizing: border-box;
+    }
     @media(max-width:600px){
       .label{flex-direction:column;align-items:flex-start}
       .container{margin:20px;padding:20px}
@@ -220,8 +235,10 @@
       const resultadosOrdenados = Object.entries(conteo).sort((a,b) => b[1] - a[1]);
 
       resultadosOrdenados.forEach(([nombre,num])=>{
-        const pct = ((num / total) * 100).toFixed(1);
-        
+        const pctReal = (num / total) * 100;
+        const pctText = pctReal.toFixed(1);
+        const widthPct = (pctReal > 0 && pctReal < 5) ? 5 : pctReal;
+
         // Encontrar información adicional de la lista
         const listaInfo = candidatos.find(c => c.nombre === nombre);
         const numeroLista = listaInfo ? listaInfo.numero : '';
@@ -237,7 +254,7 @@
               <span style="color: #007bff; font-size: 1.1em;">${num} ${translations[currentLang].votes}</span>
             </div>
             <div class="progress-bar">
-              <div class="progress" style="width:${pct}%">${pct}%</div>
+              <div class="progress" style="width:${widthPct}%">${pctText}%</div>
             </div>
           </div>
         `);

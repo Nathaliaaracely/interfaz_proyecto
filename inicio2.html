@@ -92,9 +92,9 @@
     <p class="subtitle" data-i18n="systemSubtitle">Sistema de votación electrónica de la Unidad Educativa</p>
 
     <div class="info-box">
-      📢 <span data-i18n="democraticProcess">Este proceso democrático permite a los estudiantes elegir a sus representantes del consejo estudiantil.</span><br>
+      <span> <span data-i18n="democraticProcess">Este proceso democrático permite a los estudiantes elegir a sus representantes del consejo estudiantil.</span><br>
 
-      <span>🕒 <span data-i18n="votingSchedule">Horario de votación:</span></span>
+      <span> <span data-i18n="votingSchedule">Horario de votación:</span></span>
       <div id="horario"><span data-i18n="loadingSchedule">Cargando horario...</span></div>
     </div>
 
@@ -105,7 +105,7 @@
     </footer>
   </div>
 
-  <script src="menu.js"></script>
+  <script src="menu.html"></script>
   <script>
     /* ————————————————————————————  SISTEMA DE TRADUCCIONES  ———————————————————————————— */
     const translations = {
@@ -152,7 +152,7 @@
 
     /* ————————————————————————————  APLICAR TRADUCCIÓN  ———————————————————————————— */
     function applyTranslations() {
-      console.log("🌐 Aplicando traducción en inicio2:", currentLang);
+      console.log(" Aplicando traducción en inicio2:", currentLang);
       
       // Traducir elementos con data-i18n
       document.querySelectorAll("[data-i18n]").forEach(el => {
@@ -168,11 +168,170 @@
       .then(res => res.text())
       .then(data => {
         document.getElementById("menu").innerHTML = data;
-        // Aplicar traducciones después de cargar el menú
-        setTimeout(() => {
-          applyTranslations();
-        }, 100);
+        
+        // Inicializar funciones del menú después de cargarlo
+        initMenuFunctions();
+      })
+      .catch(error => {
+        console.error("Error al cargar el menú:", error);
       });
+
+    // Función para realizar búsquedas
+    function performSearch() {
+      console.log(" Iniciando búsqueda...");
+      const searchInput = document.getElementById("searchInput");
+      if (!searchInput) {
+        console.error(" No se encontró el campo de búsqueda");
+        alert("Error: Campo de búsqueda no encontrado");
+        return;
+      }
+
+      const query = searchInput.value.toLowerCase().trim();
+      if (!query) {
+        console.log(" Búsqueda vacía");
+        alert("Por favor escribe algo para buscar.");
+        return;
+      }
+
+      console.log(`Buscando: "${query}" en idioma: ${currentLang}`);
+
+      const searchTerms = {
+        candidates: {
+          es: ["candidato", "candidatos", "presidente", "vicepresidente", "lista", "listas", "ana", "luis", "camila", "roberto"],
+          en: ["candidate", "candidates", "president", "vice president", "list", "lists", "ana", "luis", "camila", "roberto"],
+          id: ["kandidat", "presiden", "wakil presiden", "daftar", "ana", "luis", "camila", "roberto"]
+        },
+        vote: {
+          es: ["votar", "votación", "voto", "votos", "elegir", "elección", "sufragio"],
+          en: ["vote", "voting", "election", "choose", "ballot", "poll"],
+          id: ["pilih", "pemilihan", "suara", "memilih", "voting"]
+        },
+        results: {
+          es: ["resultado", "resultados", "ganador", "conteo", "estadística", "estadisticas"],
+          en: ["result", "results", "winner", "count", "statistics", "stats"],
+          id: ["hasil", "pemenang", "perhitungan", "statistik"]
+        },
+        home: {
+          es: ["inicio", "principal", "casa", "hogar", "bienvenida", "bienvenido"],
+          en: ["home", "main", "start", "beginning", "welcome"],
+          id: ["beranda", "utama", "awal", "selamat datang"]
+        },
+        reviews: {
+          es: ["reseña", "reseñas", "opinión", "opiniones", "experiencia", "comentario", "valoración"],
+          en: ["review", "reviews", "opinion", "opinions", "experience", "comment", "rating"],
+          id: ["ulasan", "pendapat", "pengalaman", "komentar", "penilaian"]
+        },
+        contact: {
+          es: ["contacto", "contactar", "mensaje", "comunicar", "ayuda", "soporte"],
+          en: ["contact", "message", "communicate", "reach", "help", "support"],
+          id: ["kontak", "pesan", "berkomunikasi", "bantuan", "dukungan"]
+        }
+      };
+
+      // Usar el idioma actual del sistema
+      const searchLang = currentLang || 'es';
+      console.log(`Idioma de búsqueda: ${searchLang}`);
+
+      let destination = null;
+      let matchedTerm = "";
+      let pageName = "";
+
+      for (const [page, terms] of Object.entries(searchTerms)) {
+        const allTerms = terms[searchLang] || [];
+        console.log(`Buscando en página ${page} con términos:`, allTerms);
+        
+        const match = allTerms.find(term => query.includes(term));
+        if (match) {
+          matchedTerm = match;
+          pageName = page;
+          switch (page) {
+            case 'candidates': destination = 'candidatos.html'; break;
+            case 'vote': destination = 'votacion.html'; break;
+            case 'results': destination = 'resultados.html'; break;
+            case 'home': destination = 'inicio2.html'; break;
+            case 'reviews': destination = 'reseñas.html'; break;
+            case 'contact': destination = 'contacto.html'; break;
+          }
+          console.log(` Término coincidente: "${matchedTerm}" en página: ${pageName}`);
+          break;
+        }
+      }
+
+      if (destination) {
+        console.log(` Redirigiendo a: ${destination} (${pageName})`);
+        alert(`Redirigiendo a: ${pageName} (${matchedTerm})`);
+        searchInput.value = "";
+        setTimeout(() => {
+          window.location.href = destination;
+        }, 1000);
+      } else {
+        console.log(` No se encontraron resultados para: "${query}"`);
+        alert(`No se encontraron resultados para: "${query}"`);
+      }
+    }
+
+    // Función para inicializar las funciones del menú
+    function initMenuFunctions() {
+      console.log(" Inicializando funciones del menú...");
+      
+      // Inicializar el selector de idioma
+      const langSelect = document.getElementById("langSelect");
+      if (langSelect) {
+        // Establecer el idioma actual
+        currentLang = localStorage.getItem("lang") || "es";
+        langSelect.value = currentLang;
+        
+        // Manejador de cambio de idioma
+        langSelect.addEventListener("change", function(e) {
+          const newLang = e.target.value;
+          localStorage.setItem("lang", newLang);
+          currentLang = newLang;
+          applyTranslations();
+          console.log("Idioma cambiado a:", newLang);
+        });
+      }
+      
+      // Inicializar menú responsive
+      const toggleBtn = document.getElementById("toggleMenuBtn");
+      const navLinks = document.getElementById("navLinks");
+      if (toggleBtn && navLinks) {
+        toggleBtn.addEventListener("click", () => {
+          navLinks.classList.toggle("active");
+        });
+      }
+      
+      // Inicializar búsqueda
+      const btnBuscar = document.getElementById("btnBuscar");
+      const searchInput = document.getElementById("searchInput");
+
+      if (btnBuscar) {
+        btnBuscar.addEventListener("click", (e) => {
+          e.preventDefault();
+          performSearch();
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            performSearch();
+          }
+        });
+      }
+      
+      // Inicializar cierre de sesión
+      const logoutBtn = document.getElementById("cerrarSesionUsuario");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("usuarioActual");
+          window.location.href = "inicio.html";
+        });
+      }
+      
+      console.log(" Funciones del menú inicializadas");
+    }
 
     // Mostrar fecha y hora de inicio y fin
     const contenedorHorario = document.getElementById("horario");
@@ -212,7 +371,7 @@
         }
       });
       
-      console.log("✅ Inicio2 inicializado con idioma:", currentLang);
+      console.log(" Inicio2 inicializado con idioma:", currentLang);
     });
 
     // Aplicar traducciones inmediatamente
