@@ -295,8 +295,8 @@
 
     const candidatesList = document.getElementById('candidatesList');
 
-    // Listas completas de candidatos por defecto
-    let candidates = JSON.parse(localStorage.getItem('candidates')) || [
+    // Candidatos por defecto que siempre deben existir
+    const defaultCandidates = [
       {
         numero: 1,
         nombre: "Lista \"Unión Estudiantil\"",
@@ -362,6 +362,14 @@
         ]
       }
     ];
+
+    // Inicializar localStorage con candidatos por defecto si no existe
+    if (!localStorage.getItem('candidates')) {
+      localStorage.setItem('candidates', JSON.stringify(defaultCandidates));
+    }
+
+    // Cargar candidatos desde localStorage (que ya incluye los por defecto)
+    let candidates = JSON.parse(localStorage.getItem('candidates'));
 
     // Función para mostrar candidatos en la página
     function displayCandidates() {

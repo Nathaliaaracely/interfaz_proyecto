@@ -130,22 +130,46 @@
     cargarMenu();
 
     /* ——————————————————————————————————————————
-       2) MOSTRAR / OCULTAR RESULTADOS
+       2) VERIFICAR ESTADO DE VOTACIÓN Y MOSTRAR/OCULTAR RESULTADOS
     —————————————————————————————————————————— */
-    function actualizarVista() {
-      const finISO = localStorage.getItem("voto_fin");
-
-      if (!finISO) {
-        document.getElementById("mensajeEspera").textContent = translations[currentLang].notConfigured;
-        document.getElementById("mensajeEspera").style.display = "block";
-        document.getElementById("contenedorResultados").style.display = "none";
-        return;
+    function verificarEstadoVotacion() {
+      const fechaInicio = localStorage.getItem("fechaInicioVotacion");
+      const fechaFin = localStorage.getItem("fechaFinVotacion");
+      const ahora = new Date().getTime();
+      
+      console.log("📅 Verificando fechas en resultados:", {
+        inicio: fechaInicio ? new Date(parseInt(fechaInicio)) : "No configurada",
+        fin: fechaFin ? new Date(parseInt(fechaFin)) : "No configurada",
+        ahora: new Date(ahora)
+      });
+      
+      if (!fechaInicio || !fechaFin) {
+        return { estado: "no_configurada", mensaje: translations[currentLang].notConfigured };
       }
+      
+      const inicioTime = parseInt(fechaInicio);
+      const finTime = parseInt(fechaFin);
+      
+      if (ahora < inicioTime) {
+        const inicioDate = new Date(inicioTime);
+        return { 
+          estado: "no_iniciada", 
+          mensaje: `La votación comenzará el ${inicioDate.toLocaleDateString()} a las ${inicioDate.toLocaleTimeString()}.` 
+        };
+      }
+      
+      if (ahora > finTime) {
+        return { estado: "finalizada", mensaje: "Votación finalizada - Mostrando resultados" };
+      }
+      
+      return { estado: "activa", mensaje: translations[currentLang].waitingMessage };
+    }
+    
+    function actualizarVista() {
+      const estadoVotacion = verificarEstadoVotacion();
+      console.log("🗳️ Estado votación en resultados:", estadoVotacion);
 
-      const ahora   = new Date();          
-      const finDate = new Date(finISO);    
-
-      /*  ———  ADMIN: ve siempre  ——— */
+      /*  ———  ADMIN: ve siempre los resultados  ——— */
       if (rolUsuario === "admin") {
         document.getElementById("mensajeEspera").style.display = "none";
         document.getElementById("contenedorResultados").style.display = "block";
@@ -153,14 +177,15 @@
         return;
       }
 
-      /*  ———  USUARIO NORMAL: solo si ya terminó  ——— */
-      if (ahora < finDate) {
-        document.getElementById("mensajeEspera").style.display = "block";
-        document.getElementById("contenedorResultados").style.display = "none";
-      } else {
+      /*  ———  USUARIO NORMAL: solo si ya terminó la votación  ——— */
+      if (estadoVotacion.estado === "finalizada") {
         document.getElementById("mensajeEspera").style.display = "none";
         document.getElementById("contenedorResultados").style.display = "block";
         renderResultados();
+      } else {
+        document.getElementById("mensajeEspera").innerHTML = `📅 ${estadoVotacion.mensaje}`;
+        document.getElementById("mensajeEspera").style.display = "block";
+        document.getElementById("contenedorResultados").style.display = "none";
       }
     }
 
@@ -170,8 +195,8 @@
     function renderResultados() {
       const votos = JSON.parse(localStorage.getItem("votes")) || {};
       
-      // Listas completas de candidatos
-      const listasCandidatos = [
+      // Candidatos por defecto que siempre deben existir
+      const defaultCandidates = [
         {
           numero: 1,
           nombre: "Lista \"Unión Estudiantil\"",
@@ -214,11 +239,13 @@
         }
       ];
 
-      // Usar listas predefinidas si no hay candidatos en localStorage
-      let candidatos = JSON.parse(localStorage.getItem("candidates")) || [];
-      if (candidatos.length === 0) {
-        candidatos = listasCandidatos;
+      // Inicializar localStorage con candidatos por defecto si no existe
+      if (!localStorage.getItem('candidates')) {
+        localStorage.setItem('candidates', JSON.stringify(defaultCandidates));
       }
+
+      // Obtener listas de candidatos desde localStorage (que ya incluye los por defecto)
+      let candidatos = JSON.parse(localStorage.getItem('candidates'));
 
       /* Construir objeto nombre → votos (0 por defecto) */
       const conteo = {};

@@ -116,17 +116,23 @@
 
     // Mostrar estado actual
     function mostrarEstadoActual() {
-      const storedStart = localStorage.getItem("voto_inicio");
-      const storedEnd = localStorage.getItem("voto_fin");
+      const storedStart = localStorage.getItem("fechaInicioVotacion");
+      const storedEnd = localStorage.getItem("fechaFinVotacion");
       const infoDiv = document.getElementById("infoFechas");
 
       if (!storedStart || !storedEnd) {
         infoDiv.innerHTML = "❌ <strong>No hay fechas configuradas</strong>";
         return;
       }
+<<<<<<< HEAD
 
       const inicio = new Date(storedStart);
       const fin = new Date(storedEnd);
+=======
+      
+      const inicio = new Date(parseInt(storedStart));
+      const fin = new Date(parseInt(storedEnd));
+>>>>>>> 940ec8b6c6d9ac886e7d522bb307e93fa30876bd
       const ahora = new Date();
 
       let estado = "";
@@ -150,11 +156,25 @@
       `;
     }
 
+<<<<<<< HEAD
     // Inicializar valores guardados
     const storedStart = localStorage.getItem("voto_inicio");
     const storedEnd = localStorage.getItem("voto_fin");
     if (storedStart) document.getElementById("inicio").value = storedStart;
     if (storedEnd) document.getElementById("fin").value = storedEnd;
+=======
+    // Cargar fechas guardadas en localStorage si existen y mostrar estado
+    const storedStart = localStorage.getItem("fechaInicioVotacion");
+    const storedEnd = localStorage.getItem("fechaFinVotacion");
+    if (storedStart) {
+      const startDate = new Date(parseInt(storedStart));
+      document.getElementById("inicio").value = startDate.toISOString().slice(0, 16);
+    }
+    if (storedEnd) {
+      const endDate = new Date(parseInt(storedEnd));
+      document.getElementById("fin").value = endDate.toISOString().slice(0, 16);
+    }
+>>>>>>> 940ec8b6c6d9ac886e7d522bb307e93fa30876bd
     mostrarEstadoActual();
 
     // Alternar campos manuales
@@ -162,6 +182,7 @@
       const modo = e.target.value;
       const campos = document.getElementById("camposManual");
       const ahora = new Date();
+<<<<<<< HEAD
       const inicioInput = document.getElementById("inicio");
       const finInput = document.getElementById("fin");
 
@@ -184,6 +205,25 @@
           finInput.value = finManana.toISOString().slice(0, 16);
         }
       }
+=======
+      const fin = new Date(ahora.getTime() + 60 * 60 * 1000); // 1 hora después
+      
+      const inicioStr = ahora.toISOString().slice(0, 16);
+      const finStr = fin.toISOString().slice(0, 16);
+      
+      document.getElementById("inicio").value = inicioStr;
+      document.getElementById("fin").value = finStr;
+      
+      // Guardar en timestamp para compatibilidad
+      localStorage.setItem("fechaInicioVotacion", ahora.getTime().toString());
+      localStorage.setItem("fechaFinVotacion", fin.getTime().toString());
+      
+      mostrarEstadoActual();
+      
+      const msg = document.getElementById("msg");
+      msg.style.color = "green";
+      msg.innerHTML = "🚀 ¡Votación activada inmediatamente por 1 hora!";
+>>>>>>> 940ec8b6c6d9ac886e7d522bb307e93fa30876bd
     });
 
     // Guardar fechas
@@ -205,9 +245,19 @@
         return;
       }
 
+<<<<<<< HEAD
       localStorage.setItem("voto_inicio", inicio);
       localStorage.setItem("voto_fin", fin);
 
+=======
+      // Convertir a timestamps y guardar
+      const inicioTime = new Date(inicio).getTime();
+      const finTime = new Date(fin).getTime();
+      
+      localStorage.setItem("fechaInicioVotacion", inicioTime.toString());
+      localStorage.setItem("fechaFinVotacion", finTime.toString());
+      
+>>>>>>> 940ec8b6c6d9ac886e7d522bb307e93fa30876bd
       mostrarEstadoActual();
 
       msg.style.color = "green";
@@ -218,6 +268,16 @@
           Fin: ${new Date(fin).toLocaleString('es-ES')}
         </small>
       `;
+<<<<<<< HEAD
+=======
+      
+      // Debug en consola
+      console.log("=== FECHAS CONFIGURADAS ===");
+      console.log("Inicio guardado:", inicioTime);
+      console.log("Fin guardado:", finTime);
+      console.log("Inicio parseado:", new Date(inicioTime));
+      console.log("Fin parseado:", new Date(fin));
+>>>>>>> 940ec8b6c6d9ac886e7d522bb307e93fa30876bd
     });
   </script>
 </body>
