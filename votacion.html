@@ -344,6 +344,11 @@ function applyTranslations() {
     document.addEventListener("DOMContentLoaded", () => {
       console.log("🔄 Página cargada - Iniciando votación");
       
+      // Obtener referencias a los elementos necesarios una sola vez
+      const submitBtn = document.querySelector('.submit-btn');
+      const resultMsg = document.getElementById('resultMessage');
+      const lista = document.getElementById('listaCandidatos');
+      
       // Inicializar datos por defecto si no existen
       
       // Cargar menú
@@ -448,12 +453,6 @@ function applyTranslations() {
         });
       });
 
-      const lista = document.getElementById("listaCandidatos");
-      const submitBtn = document.querySelector(".submit-btn");
-      const resultMsg = document.getElementById("resultMessage");
-      
-      console.log("🎯 Elementos obtenidos:", {lista, submitBtn, resultMsg});
-
       // Verificar si el usuario ya votó
       const usuarioActual = localStorage.getItem("usuarioActual");
       const votosRealizados = JSON.parse(localStorage.getItem("votosRealizados")) || {};
@@ -495,9 +494,47 @@ function applyTranslations() {
         return { estado: "activa", mensaje: "Votación activa" };
       }
       
-      const estadoVotacion = verificarEstadoVotacion();
-      console.log("🗳️ Estado de votación:", estadoVotacion);
+      // Función para actualizar el estado del botón según el horario de votación
+      function actualizarEstadoBotonVotar() {
+        const estadoActual = verificarEstadoVotacion();
+        
+        // Si el estado no es activo, deshabilitar el botón
+        if (estadoActual.estado !== 'activa') {
+          submitBtn.disabled = true;
+          submitBtn.style.opacity = '0.7';
+          submitBtn.style.cursor = 'not-allowed';
+          
+          // Mostrar mensaje según el estado de la votación
+          if (estadoActual.estado === 'no_configurada') {
+            resultMsg.textContent = 'La votación no ha sido configurada aún.';
+          } else {
+            resultMsg.textContent = estadoActual.mensaje;
+          }
+          resultMsg.style.color = estadoActual.estado === 'finalizada' ? 'green' : 'red';
+          resultMsg.style.fontSize = '1.3rem';
+        } else {
+          // Si la votación está activa, habilitar el botón
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.style.cursor = 'pointer';
+          resultMsg.textContent = '';
+        }
+      }
       
+      // Configurar la verificación inicial del estado
+      actualizarEstadoBotonVotar();
+      
+      // Verificar periódicamente el estado de la votación (cada minuto)
+      setInterval(actualizarEstadoBotonVotar, 60000);
+      
+      // Verificar también al cambiar de pestaña
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          actualizarEstadoBotonVotar();
+        }
+      });
+      
+      // Verificar si el usuario ya votó
       if (votosRealizados[usuarioActual]) {
         console.log("❌ Usuario ya votó");
         resultMsg.innerHTML = `✅ ${translations[currentLang].alreadyVoted} <strong>${votosRealizados[usuarioActual]}</strong>. <br>${translations[currentLang].thankYou}`;
@@ -505,145 +542,132 @@ function applyTranslations() {
         resultMsg.style.fontSize = "1.3rem";
         lista.style.display = "none";
         submitBtn.style.display = "none";
-        return;
-      }
-      
-      // MOSTRAR MENSAJE SEGÚN EL ESTADO DE LA VOTACIÓN
-      if (estadoVotacion.estado !== "activa") {
-        console.log("⏰ Votación no activa:", estadoVotacion.estado);
-        resultMsg.innerHTML = `📅 ${estadoVotacion.mensaje}`;
-        resultMsg.style.color = estadoVotacion.estado === "finalizada" ? "green" : "orange";
-        resultMsg.style.fontSize = "1.3rem";
-        lista.style.display = "none";
-        submitBtn.style.display = "none";
-        return;
-      }
+      } else {
+        console.log("✅ Mostrando listas de candidatos - INICIO");
 
-      // MOSTRAR SIEMPRE LAS LISTAS - Sin validaciones de fecha
-      console.log("✅ Mostrando listas de candidatos - INICIO");
-
-      // Renderizar listas de candidatos
-      candidatos.forEach((listaCandidato, index) => {
-        console.log(`🏛️ Renderizando lista ${index + 1}:`, listaCandidato.nombre);
-        console.log(`📋 Datos de la lista:`, listaCandidato);
-        
-        // Validar que todos los campos existen
-        const numero = listaCandidato.numero || (index + 1);
-        const nombre = listaCandidato.nombre || `Lista ${index + 1}`;
-        const slogan = listaCandidato.slogan || "Sin slogan";
-        const presidente = listaCandidato.presidente || "Sin presidente";
-        const vicepresidente = listaCandidato.vicepresidente || "Sin vicepresidente";
-        const secretario = listaCandidato.secretario || "Sin secretario";
-        const tesorero = listaCandidato.tesorero || "Sin tesorero";
-        const photo = listaCandidato.photo || "perfildefault.png";
-        const propuestas = listaCandidato.propuestas || [];
-        
-        const label = document.createElement("label");
-        label.className = "candidate-card";
-        label.innerHTML = `
-          <input type="radio" name="candidate" value="${nombre}">
-          <div class="list-number">${numero}</div>
-          <img src="${photo}" alt="${nombre}">
-          <h3>${nombre}</h3>
-          <p class="slogan">"${slogan}"</p>
-          <div class="list-members">
-            <div class="member"><strong>${translations[currentLang].president}</strong> ${presidente}</div>
-            <div class="member"><strong>${translations[currentLang].vicePresident}</strong> ${vicepresidente}</div>
-            <div class="member"><strong>${translations[currentLang].secretary}</strong> ${secretario}</div>
-            <div class="member"><strong>${translations[currentLang].treasurer}</strong> ${tesorero}</div>
-          </div>
-        `;
-        
-        // Crear tooltip con propuestas si existen
-        if (propuestas.length > 0) {
-          const tooltip = document.createElement("div");
-          tooltip.className = "tooltip";
-          tooltip.innerHTML = `
-            <h4>${translations[currentLang].proposalsOf} ${nombre.replace(/Lista "|"/g, '').replace('Unión Estudiantil', 'Unión Estudiantil').replace('Innovación Estudiantil', 'Innovación Estudiantil').replace('Verde y Futuro', 'Verde y Futuro').replace('Cultura y Arte', 'Cultura y Arte')}</h4>
-            <ul>
-              ${propuestas.map(prop => `<li>${prop}</li>`).join('')}
-            </ul>
+        // Renderizar listas de candidatos
+        candidatos.forEach((listaCandidato, index) => {
+          console.log(`🏛️ Renderizando lista ${index + 1}:`, listaCandidato.nombre);
+          console.log(`📋 Datos de la lista:`, listaCandidato);
+          
+          // Validar que todos los campos existen
+          const numero = listaCandidato.numero || (index + 1);
+          const nombre = listaCandidato.nombre || `Lista ${index + 1}`;
+          const slogan = listaCandidato.slogan || "Sin slogan";
+          const presidente = listaCandidato.presidente || "Sin presidente";
+          const vicepresidente = listaCandidato.vicepresidente || "Sin vicepresidente";
+          const secretario = listaCandidato.secretario || "Sin secretario";
+          const tesorero = listaCandidato.tesorero || "Sin tesorero";
+          const photo = listaCandidato.photo || "perfildefault.png";
+          const propuestas = listaCandidato.propuestas || [];
+          
+          const label = document.createElement("label");
+          label.className = "candidate-card";
+          label.innerHTML = `
+            <input type="radio" name="candidate" value="${nombre}">
+            <div class="list-number">${numero}</div>
+            <img src="${photo}" alt="${nombre}">
+            <h3>${nombre}</h3>
+            <p class="slogan">"${slogan}"</p>
+            <div class="list-members">
+              <div class="member"><strong>${translations[currentLang].president}</strong> ${presidente}</div>
+              <div class="member"><strong>${translations[currentLang].vicePresident}</strong> ${vicepresidente}</div>
+              <div class="member"><strong>${translations[currentLang].secretary}</strong> ${secretario}</div>
+              <div class="member"><strong>${translations[currentLang].treasurer}</strong> ${tesorero}</div>
+            </div>
           `;
-          label.appendChild(tooltip);
           
-          // Eventos para mostrar/ocultar tooltip
-          label.addEventListener("mouseenter", (e) => {
-            const rect = label.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          // Crear tooltip con propuestas si existen
+          if (propuestas.length > 0) {
+            const tooltip = document.createElement("div");
+            tooltip.className = "tooltip";
+            tooltip.innerHTML = `
+              <h4>${translations[currentLang].proposalsOf} ${nombre.replace(/Lista "|"/g, '').replace('Unión Estudiantil', 'Unión Estudiantil').replace('Innovación Estudiantil', 'Innovación Estudiantil').replace('Verde y Futuro', 'Verde y Futuro').replace('Cultura y Arte', 'Cultura y Arte')}</h4>
+              <ul>
+                ${propuestas.map(prop => `<li>${prop}</li>`).join('')}
+              </ul>
+            `;
+            label.appendChild(tooltip);
             
-            // Posicionar el tooltip debajo de la tarjeta por defecto
-            tooltip.style.top = `${label.offsetHeight + 10}px`;
-            tooltip.style.left = "50%";
-            tooltip.style.transform = "translateX(-50%)";
+            // Eventos para mostrar/ocultar tooltip
+            label.addEventListener("mouseenter", (e) => {
+              const rect = label.getBoundingClientRect();
+              const viewportHeight = window.innerHeight;
+              const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+              
+              // Posicionar el tooltip debajo de la tarjeta por defecto
+              tooltip.style.top = `${label.offsetHeight + 10}px`;
+              tooltip.style.left = "50%";
+              tooltip.style.transform = "translateX(-50%)";
+              
+              // Si no hay espacio suficiente abajo, posicionar arriba
+              const tooltipHeight = 200; // altura estimada del tooltip
+              const cardBottom = rect.bottom;
+              const spaceBelow = viewportHeight - (cardBottom - scrollTop);
+              
+              if (spaceBelow < tooltipHeight) {
+                tooltip.style.top = `-${tooltipHeight + 10}px`;
+                tooltip.classList.add("tooltip-above");
+              } else {
+                tooltip.classList.remove("tooltip-above");
+              }
+              
+              tooltip.classList.add("show");
+            });
             
-            // Si no hay espacio suficiente abajo, posicionar arriba
-            const tooltipHeight = 200; // altura estimada del tooltip
-            const cardBottom = rect.bottom;
-            const spaceBelow = viewportHeight - (cardBottom - scrollTop);
-            
-            if (spaceBelow < tooltipHeight) {
-              tooltip.style.top = `-${tooltipHeight + 10}px`;
-              tooltip.classList.add("tooltip-above");
-            } else {
-              tooltip.classList.remove("tooltip-above");
-            }
-            
-            tooltip.classList.add("show");
-          });
+            label.addEventListener("mouseleave", () => {
+              tooltip.classList.remove("show");
+            });
+          }
           
-          label.addEventListener("mouseleave", () => {
-            tooltip.classList.remove("show");
-          });
-        }
-        
-        lista.appendChild(label);
-      });
-      
-      console.log("🎨 Listas renderizadas completamente");
-      console.log("📊 Total de elementos en lista:", lista.children.length);
-
-      // Resaltar candidato seleccionado
-      document.querySelectorAll('.candidate-card input').forEach(input => {
-        input.addEventListener('change', () => {
-          document.querySelectorAll('.candidate-card').forEach(card => card.classList.remove('selected'));
-          input.closest('.candidate-card').classList.add('selected');
+          lista.appendChild(label);
         });
-      });
-
-      // Enviar voto
-      document.getElementById("voteForm").addEventListener("submit", e => {
-        e.preventDefault();
-        const seleccionado = document.querySelector('input[name="candidate"]:checked');
-
-        if (!seleccionado) {
-          resultMsg.textContent = translations[currentLang].selectCandidate;
-          resultMsg.style.color = "red";
-          return;
-        }
-
-        const voto = seleccionado.value;
         
-        // Registrar el voto del usuario para evitar votos duplicados
-        const votosRealizados = JSON.parse(localStorage.getItem("votosRealizados")) || {};
-        votosRealizados[usuarioActual] = voto;
-        localStorage.setItem("votosRealizados", JSON.stringify(votosRealizados));
-        
-        // Actualizar conteo de votos
-        const votos = JSON.parse(localStorage.getItem("votes")) || {};
-        votos[voto] = (votos[voto] || 0) + 1;
-        localStorage.setItem("votes", JSON.stringify(votos));
+        console.log("🎨 Listas renderizadas completamente");
+        console.log("📊 Total de elementos en lista:", lista.children.length);
 
-        resultMsg.innerHTML = `${translations[currentLang].hasVotedFor} <strong>${voto}</strong>. ${translations[currentLang].thankYou}`;
-        resultMsg.style.color = "green";
-        resultMsg.style.fontSize = "1.3rem";
+        // Resaltar candidato seleccionado
+        document.querySelectorAll('.candidate-card input').forEach(input => {
+          input.addEventListener('change', () => {
+            document.querySelectorAll('.candidate-card').forEach(card => card.classList.remove('selected'));
+            input.closest('.candidate-card').classList.add('selected');
+          });
+        });
 
-        lista.style.display = "none";
-        submitBtn.style.display = "none";
+        // Enviar voto
+        document.getElementById("voteForm").addEventListener("submit", e => {
+          e.preventDefault();
+          const seleccionado = document.querySelector('input[name="candidate"]:checked');
 
-        setTimeout(() => window.location.href = "inicio2.html", 3000);
-      });
+          if (!seleccionado) {
+            resultMsg.textContent = translations[currentLang].selectCandidate;
+            resultMsg.style.color = "red";
+            return;
+          }
 
+          const voto = seleccionado.value;
+          
+          // Registrar el voto del usuario para evitar votos duplicados
+          const votosRealizados = JSON.parse(localStorage.getItem("votosRealizados")) || {};
+          votosRealizados[usuarioActual] = voto;
+          localStorage.setItem("votosRealizados", JSON.stringify(votosRealizados));
+          
+          // Actualizar conteo de votos
+          const votos = JSON.parse(localStorage.getItem("votes")) || {};
+          votos[voto] = (votos[voto] || 0) + 1;
+          localStorage.setItem("votes", JSON.stringify(votos));
+
+          resultMsg.innerHTML = `${translations[currentLang].hasVotedFor} <strong>${voto}</strong>. ${translations[currentLang].thankYou}`;
+          resultMsg.style.color = "green";
+          resultMsg.style.fontSize = "1.3rem";
+
+          lista.style.display = "none";
+          submitBtn.style.display = "none";
+
+          setTimeout(() => window.location.href = "inicio2.html", 3000);
+        });
+      }
+      
       /* ————————————————————————————  INICIALIZACIÓN  ———————————————————————————— */
       applyTranslations();
       

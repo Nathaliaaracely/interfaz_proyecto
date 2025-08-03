@@ -335,25 +335,43 @@
 
     // Mostrar fecha y hora de inicio y fin
     const contenedorHorario = document.getElementById("horario");
-    const inicio = localStorage.getItem("voto_inicio");
-    const fin = localStorage.getItem("voto_fin");
+    
+    // Obtener fechas del localStorage con las claves correctas
+    const fechaInicio = localStorage.getItem("fechaInicioVotacion");
+    const fechaFin = localStorage.getItem("fechaFinVotacion");
 
-    function formatearFecha(fechaISO) {
-      const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      const locale = currentLang === 'es' ? 'es-EC' : currentLang === 'en' ? 'en-US' : 'id-ID';
-      return new Date(fechaISO).toLocaleString(locale, opciones);
+    function formatearFecha(timestamp) {
+      if (!timestamp) return "";
+      const fecha = new Date(parseInt(timestamp));
+      const opciones = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit',
+        hour12: true
+      };
+      
+      // Ajustar según el idioma seleccionado
+      let locale = 'es-EC';
+      if (currentLang === 'en') locale = 'en-US';
+      if (currentLang === 'id') locale = 'id-ID';
+      
+      return fecha.toLocaleString(locale, opciones);
     }
 
     function updateScheduleDisplay() {
-      if (inicio && fin) {
-        const fromText = translations[currentLang].from || "Desde";
-        const untilText = translations[currentLang].until || "Hasta";
+      if (fechaInicio && fechaFin) {
+        const fromText = translations[currentLang]?.from || "Desde";
+        const untilText = translations[currentLang]?.until || "Hasta";
+        
         contenedorHorario.innerHTML = `
-          ${fromText} <strong>${formatearFecha(inicio)}</strong><br>
-          ${untilText} <strong>${formatearFecha(fin)}</strong>
+          ${fromText} <strong>${formatearFecha(fechaInicio)}</strong><br>
+          ${untilText} <strong>${formatearFecha(fechaFin)}</strong>
         `;
       } else {
-        contenedorHorario.textContent = translations[currentLang].scheduleNotSet || "Aún no se ha configurado la fecha de votación.";
+        contenedorHorario.textContent = translations[currentLang]?.scheduleNotSet || 
+          "Aún no se ha configurado la fecha de votación.";
       }
     }
 
