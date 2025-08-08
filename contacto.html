@@ -7,38 +7,335 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" />
   <link rel="stylesheet" href="menu.css" />
   <style>
-    * { box-sizing: border-box; }
-    body, html {
-      margin: 0; padding: 0; min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: url('fondo.png') no-repeat center center fixed;
-      background-size: cover; color: #333;
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
     }
+    
+    body, html {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+    
     .overlay {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
+      position: fixed; 
+      top: 0; 
+      left: 0;
+      width: 100%; 
+      height: 100%;
+      background: rgba(0,0,0,0.2);
       z-index: -1;
     }
+    
     .form-container {
-      max-width: 800px; 
+      max-width: 900px; 
       margin: 120px auto 50px auto;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      background: rgba(255, 255, 255, 0.98);
+      padding: 50px;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 5px 20px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      animation: slideUp 0.8s ease-out;
     }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     h1 {
       color: #003366;
       text-align: center;
       margin-bottom: 10px;
-      font-size: 2.2rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #003366, #0066cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+    
     .subtitle {
       text-align: center; 
-      margin-bottom: 30px; 
+      margin-bottom: 40px; 
       color: #666; 
+      font-size: 18px;
+      font-weight: 300;
+    }
+    
+    /* Estilos mejorados para input-box */
+    .input-box {
+      position: relative;
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+    
+    .input-box label {
+      display: block;
+      margin-bottom: 8px;
+      color: #003366;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    
+    .input-box input,
+    .input-box select,
+    .input-box textarea {
+      width: 100%;
+      padding: 18px 20px 18px 50px;
+      border: 2px solid #e0e6ed;
+      background: #fafbfc;
+      border-radius: 15px;
+      color: #333;
       font-size: 16px;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
+    }
+    
+    .input-box input:focus,
+    .input-box select:focus,
+    .input-box textarea:focus {
+      border-color: #003366;
+      background: #ffffff;
+      box-shadow: 0 8px 25px rgba(0, 51, 102, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .input-box i {
+      position: absolute;
+      top: 50%;
+      left: 18px;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: #003366;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    
+    .input-box:focus-within i {
+      color: #0066cc;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    /* Estilos especiales para textarea */
+    .input-box textarea {
+      min-height: 130px;
+      resize: vertical;
+      padding-top: 18px;
+      line-height: 1.6;
+    }
+    
+    .input-box textarea + i {
+      top: 25px;
+      transform: translateY(0);
+    }
+    
+    /* Sistema de calificación por estrellas mejorado */
+    #starRating {
+      display: flex;
+      gap: 8px;
+      padding: 15px 0;
+    }
+    
+    .star-rating {
+      font-size: 28px;
+      color: #ddd;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .star-rating:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+    }
+    
+    /* Contenedor de rating mejorado */
+    .rating-container {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      border: 2px solid #e0e6ed;
+      background: #fafbfc;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .rating-container:focus-within {
+      border-color: #003366;
+      background: #ffffff;
+      box-shadow: 0 8px 25px rgba(0, 51, 102, 0.1);
+    }
+    
+    #ratingText {
+      margin-left: 20px;
+      color: #666;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    /* Checkboxes personalizados */
+    .remember-forgot {
+      margin-bottom: 20px;
+    }
+    
+    .remember-forgot label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 15px;
+      color: #555;
+      padding: 10px 0;
+      transition: color 0.3s ease;
+    }
+    
+    .remember-forgot label:hover {
+      color: #003366;
+    }
+    
+    .remember-forgot input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 12px;
+      accent-color: #003366;
+      cursor: pointer;
+    }
+    
+    /* Botón de submit mejorado */
+    .btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #003366, #0066cc);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.5px;
+      margin-top: 20px;
+      box-shadow: 0 10px 25px rgba(0, 51, 102, 0.2);
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0, 51, 102, 0.3);
+      background: linear-gradient(135deg, #0066cc, #003366);
+    }
+    
+    .btn:active {
+      transform: translateY(-1px);
+    }
+    
+    /* Link de regreso mejorado */
+    .register-link {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    .register-link a {
+      color: #003366;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+    
+    .register-link a:hover {
+      background: rgba(0, 51, 102, 0.1);
+      color: #0066cc;
+    }
+    
+    /* Mensajes del sistema mejorados */
+    #messageContainer {
+      margin-bottom: 25px;
+    }
+    
+    #messageContainer div {
+      animation: slideDown 0.5s ease-out;
+      font-weight: 500;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive design mejorado */
+    @media (max-width: 768px) {
+      .form-container {
+        margin: 20px;
+        padding: 30px 25px;
+        border-radius: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 16px;
+      }
+      
+      .input-box input,
+      .input-box select,
+      .input-box textarea {
+        padding: 16px 18px 16px 45px;
+        font-size: 16px;
+      }
+      
+      .star-rating {
+        font-size: 24px;
+      }
+      
+      .btn {
+        padding: 16px;
+        font-size: 16px;
+      }
+    }
+    
+    /* Efectos adicionales */
+    .input-box:hover {
+      transform: translateY(-1px);
+    }
+    
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #667eea, #764ba2, #667eea);
+      border-radius: 27px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .form-container:hover::before {
+      opacity: 0.1;
     }
   </style>
 </head>
@@ -56,7 +353,7 @@
 
       <!-- Nombre del estudiante -->
       <div class="input-box">
-        <label for="studentName" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="studentNameLabel">
+        <label for="studentName" data-i18n="studentNameLabel">
           Nombre completo del estudiante *
         </label>
         <input type="text" id="studentName" data-i18n-placeholder="studentNamePlaceholder" placeholder="Ingresa tu nombre completo" required />
@@ -65,7 +362,7 @@
 
       <!-- Email del estudiante -->
       <div class="input-box">
-        <label for="studentEmail" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="emailLabel">
+        <label for="studentEmail" data-i18n="emailLabel">
           Correo electrónico *
         </label>
         <input type="email" id="studentEmail" data-i18n-placeholder="emailPlaceholder" placeholder="tu-email@ejemplo.com" required />
@@ -74,7 +371,7 @@
 
       <!-- Carrera o programa -->
       <div class="input-box">
-        <label for="program" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="programLabel">
+        <label for="program" data-i18n="programLabel">
           Carrera o programa de estudios *
         </label>
         <input type="text" id="program" data-i18n-placeholder="programPlaceholder" placeholder="Ej: Ingeniería en Sistemas" required />
@@ -83,10 +380,10 @@
 
       <!-- Año/Semestre -->
       <div class="input-box">
-        <label for="semester" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="semesterLabel">
+        <label for="semester" data-i18n="semesterLabel">
           Año/Semestre actual *
         </label>
-        <select id="semester" required style="width: 100%; padding: 14px 45px 14px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 50px; color: #333; font-size: 14px; outline: none;">
+        <select id="semester" required>
           <option value="" data-i18n="selectLevel">Selecciona tu nivel académico</option>
           <option value="1er Semestre" data-i18n="semester1">1er Semestre</option>
           <option value="2do Semestre" data-i18n="semester2">2do Semestre</option>
@@ -105,25 +402,25 @@
 
       <!-- Calificación/Rating -->
       <div class="input-box">
-        <label for="rating" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="ratingLabel">
+        <label for="rating" data-i18n="ratingLabel">
           Calificación general de tu experiencia *
         </label>
-        <div style="display: flex; align-items: center; padding: 10px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 50px;">
-          <div id="starRating" style="display: flex; gap: 5px;">
-            <i class='bx bx-star star-rating' data-rating="1" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
-            <i class='bx bx-star star-rating' data-rating="2" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
-            <i class='bx bx-star star-rating' data-rating="3" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
-            <i class='bx bx-star star-rating' data-rating="4" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
-            <i class='bx bx-star star-rating' data-rating="5" style="font-size: 24px; color: #ddd; cursor: pointer;"></i>
+        <div class="rating-container">
+          <div id="starRating">
+            <i class='bx bx-star star-rating' data-rating="1"></i>
+            <i class='bx bx-star star-rating' data-rating="2"></i>
+            <i class='bx bx-star star-rating' data-rating="3"></i>
+            <i class='bx bx-star star-rating' data-rating="4"></i>
+            <i class='bx bx-star star-rating' data-rating="5"></i>
           </div>
-          <span id="ratingText" style="margin-left: 15px; color: #666; font-size: 14px;" data-i18n="selectRating">Selecciona una calificación</span>
+          <span id="ratingText" data-i18n="selectRating">Selecciona una calificación</span>
         </div>
         <input type="hidden" id="selectedRating" required />
       </div>
 
       <!-- Área de reseña/mensaje -->
       <div class="input-box">
-        <label for="reviewMessage" style="display: block; margin-bottom: 5px; color: #003366; font-weight: 500;" data-i18n="reviewLabel">
+        <label for="reviewMessage" data-i18n="reviewLabel">
           Tu reseña y experiencia como estudiante *
         </label>
         <textarea 
@@ -132,9 +429,8 @@
           placeholder="Comparte tu experiencia, qué te gustó más, qué mejorarías, cómo ha sido tu proceso de aprendizaje, recomendaciones para otros estudiantes, etc..." 
           required
           rows="6"
-          style="width: 100%; padding: 15px 20px; border: 1px solid #ccc; background: #f9f9f9; border-radius: 15px; color: #333; font-size: 14px; outline: none; resize: vertical; min-height: 120px; font-family: 'Poppins', sans-serif;"
         ></textarea>
-        <i class='bx bx-message-dots' style="top: 20px;"></i>
+        <i class='bx bx-message-dots'></i>
       </div>
 
       <!-- Checkbox de autorización -->
